@@ -14,7 +14,8 @@
     <link href="https://fonts.googleapis.com/css?family=Dosis:300,400,700" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js"></script>
 
-    <link href="/icons/css/fontello.7.css" rel="stylesheet">
+    <link href="public/icons/css/fontello.7.css" rel="stylesheet">
+    {{-- {!! HTML::style('public/icons/css/fontello.7.css') !!} --}}
 
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
 

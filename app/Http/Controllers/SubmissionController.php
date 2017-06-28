@@ -329,7 +329,7 @@ class SubmissionController extends Controller
                 'thumbnail'     => null,
                 'providerName'  => $submission->data['providerName'],
                 'publishedTime' => $submission->data['publishedTime'],
-                'domain'        => $submission->data['domain'] ?? domain($submission->data['url']),
+                'domain'        => $submission->data['domain'] || domain($submission->data['url']),
             ],
         ]);
 

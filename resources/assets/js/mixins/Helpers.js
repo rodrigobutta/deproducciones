@@ -148,7 +148,10 @@ export default {
          */
         authUrl(route)
         {
-            return !this.isGuest ? '/auth/' + route : '/' + route;
+            // var res = '/deproducciones';
+            var res = '/';
+
+            return !this.isGuest ? res + 'auth/' + route : res + route;
         },
     }
 };

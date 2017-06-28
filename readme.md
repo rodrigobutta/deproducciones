@@ -1,6 +1,6 @@
-# Voten.co
+# Deproducciones.com
 
-Voten.co is a real-time social bookmarking for the 21st century. It's real-time, beautiful, customizable yet simple. To get a quick taste of what Voten is written with please check our [credits page](https://voten.co/credits).
+Deproducciones.com is a real-time social bookmarking for the 21st century. It's real-time, beautiful, customizable yet simple. To get a quick taste of what Voten is written with please check our [credits page](https://voten.co/credits).
 
 ## Contributing
 

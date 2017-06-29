@@ -6,7 +6,7 @@
 
 @section('content')
 	<section class="container">
-		<h1 class="title align-center">Voten.co Privacy Policy</h1>
+		<h1 class="title align-center">Deproducciones.com Privacy Policy</h1>
 
 		<p>
 			This page is for all users and non-users wondering what we do with users’ information when they use our website. These policies apply to all our services.

@@ -9,12 +9,13 @@
     @yield('head')
 
     <meta property="og:locale" content="en_US" />
-    <meta property="og:site_name" content="Voten.co" />
+    <meta property="og:site_name" content="Deproducciones.com" />
 
     <link href="https://fonts.googleapis.com/css?family=Dosis:300,400,700" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js"></script>
 
-    <link href="/icons/css/fontello.7.css" rel="stylesheet">
+    <link href="public/icons/css/fontello.7.css" rel="stylesheet">
+    {{-- {!! HTML::style('public/icons/css/fontello.7.css') !!} --}}
 
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
 
@@ -37,7 +38,7 @@
 		<div class="header user-select">
 			<div class="logo">
 				<a href="/">
-					<img src="/imgs/voten-logo.png" alt="Voten.co">
+					<img src="/imgs/voten-logo.png" alt="Deproducciones.com">
 					Voten
 				</a>
 				<small>BETA</small>

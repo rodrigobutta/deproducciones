@@ -145,9 +145,9 @@ class CommentVotesController extends Controller
             return response('voted successfully ', 200);
         }
 
-        $comment->upvotes = $new_upvotes ?? $comment->upvotes;
-        $comment->downvotes = $new_downvotes ?? $comment->downvotes;
-        $comment->rate = rate($new_upvotes ?? $comment->upvotes, $new_downvotes ?? $comment->downvotes, $comment->created_at);
+        $comment->upvotes = $new_upvotes || $comment->upvotes;
+        $comment->downvotes = $new_downvotes || $comment->downvotes;
+        $comment->rate = rate($new_upvotes || $comment->upvotes, $new_downvotes || $comment->downvotes, $comment->created_at);
 
         DB::table('comments')->where('id', $comment->id)->update([
             'upvotes'   => $comment->upvotes,
@@ -205,9 +205,9 @@ class CommentVotesController extends Controller
             return response('voted successfully ', 200);
         }
 
-        $comment->upvotes = $new_upvotes ?? $comment->upvotes;
-        $comment->downvotes = $new_downvotes ?? $comment->downvotes;
-        $comment->rate = rate($new_upvotes ?? $comment->upvotes, $new_downvotes ?? $comment->downvotes, $comment->created_at);
+        $comment->upvotes = $new_upvotes || $comment->upvotes;
+        $comment->downvotes = $new_downvotes || $comment->downvotes;
+        $comment->rate = rate($new_upvotes || $comment->upvotes, $new_downvotes || $comment->downvotes, $comment->created_at);
 
         DB::table('comments')->where('id', $comment->id)->update([
             'upvotes'   => $comment->upvotes,

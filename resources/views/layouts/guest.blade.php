@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     @yield('head')
-    <link href="/icons/css/fontello.7.css" rel="stylesheet">
+    <link href="public/icons/css/fontello.7.css" rel="stylesheet">
+    {{-- {!! HTML::style('public/icons/css/fontello.7.css') !!} --}}
+
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.min.js"></script>

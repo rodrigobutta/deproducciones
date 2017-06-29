@@ -99,7 +99,7 @@ class CategoryController extends Controller
             return view('welcome');
         }
 
-        $submissions = $this->getSubmissions($category, $request->sort ?? 'hot');
+        $submissions = $this->getSubmissions($category, $request->sort || 'hot');
         $category = $this->getCategoryByName($category);
         $category->stats = $this->categoryStats($category->id);
 

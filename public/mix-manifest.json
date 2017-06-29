@@ -3,5 +3,10 @@
   "/css/app.css": "/css/app.css",
   "/js/vendor.js": "/js/vendor.js",
   "/js/landing.js": "/js/landing.js",
-  "/js/manifest.js": "/js/manifest.js"
+  "/js/manifest.js": "/js/manifest.js",
+  "/js/app.js.map": "/js/app.82b9abb6a106c1c5c091.js.map",
+  "/css/app.css.map": "/css/app.fcd48192540762fa8d69c5f656d794a4.css.map",
+  "/js/vendor.js.map": "/js/vendor.65726be6eb9558a66b46.js.map",
+  "/js/landing.js.map": "/js/landing.98facfeebbfe3f3af114.js.map",
+  "/js/manifest.js.map": "/js/manifest.d41d8cd98f00b204e980.js.map"
 }

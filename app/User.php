@@ -287,12 +287,14 @@ class User extends Authenticatable
      */
     public function country()
     {
-        return Activity::where([
-            'user_id' => $this->id,
-            'name'    => 'created_user',
-        ])->first()->country ?? Activity::where([
-            'user_id' => $this->id,
-        ])->orderBy('created_at', 'desc')->first()->country ?? 'unknown';
+        return 'Argentina';
+
+        // return Activity::where([
+        //     'user_id' => $this->id,
+        //     'name'    => 'created_user',
+        // ])->first()->country || Activity::where([
+        //     'user_id' => $this->id,
+        // ])->orderBy('created_at', 'desc')->first()->country || 'unknown';
     }
 
     /**

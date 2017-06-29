@@ -1,6 +1,20 @@
 <template>
-    <div class="v-modal-small" :class="{ 'width-100': !sidebar }">
+    <div id="login_register" class="v-modal-small" :class="{ 'width-100': !sidebar }">
         <div class="v-modal-small-box v-modal-small-box--light" v-on-clickaway="close">
+
+            <div class="social-login-buttons">
+                <a href="/login/facebook" class="v-button button-fb">
+                    <i class="v-icon v-facebook"></i>Connect With Facebook
+                </a>
+                <a href="/login/google" class="v-button button-google">
+                    <i class="v-icon v-google"></i>Connect With Google
+                </a>
+            </div>
+
+            <div class="or">
+                - or -
+            </div>
+
             <div class="flex1">
 	            <div class="tabs is-fullwidth">
 					<ul>

@@ -109,7 +109,11 @@ class LoginController extends Controller
         try {
             $user = Socialite::driver('google')->user();
         } catch (\Exception $e) {
-            return redirect('/');
+
+            echo($e->xdebug_message);
+            exit();
+
+            // return redirect('/');
         }
 
         $authUser = $this->findOrCreateUser($user);
@@ -129,18 +133,12 @@ class LoginController extends Controller
     private function findOrCreateUser($providerUser)
     {
 
-
         // var_dump($providerUser);
         // exit();
-
-
 
         if ($authUser = User::where('email', $providerUser->email)->first()) {
             return $authUser;
         }
-
-
-
 
 
         $user = User::create([
@@ -170,7 +168,7 @@ class LoginController extends Controller
         \Mail::to($user->email)->queue(new WelcomeToVoten($user->username));
 
         // let us know :D
-        \Mail::to('fischersully@gmail.com')->queue(new NewRegistration($user->username));
+        \Mail::to('rbutta@gmail.com')->queue(new NewRegistration($user->username));
 
         // set user's default data into cache to save few queries
         $userData = [

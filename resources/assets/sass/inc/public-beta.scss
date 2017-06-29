@@ -98,7 +98,38 @@
     align-items: center;
 }
 
-.sign-up-button {
+
+#login_register .social-login-buttons {
+    display: flex;
+    justify-content: center;
+        margin-top: 2em;
+}
+
+#login_register .social-login-buttons a {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    color: #fff;
+    height: 4em;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#login_register .or {
+    justify-content: center;
+    margin: 1em 0 1.5em 0;
+    font-weight: 600;
+    display: flex;
+}
+
+
+#login_register a.button-fb,
+#login_register a.button-google {
+  color: #fff;
+}
+
+#login_register .sign-up-button {
     background: none;
     border: 0;
     cursor: pointer;

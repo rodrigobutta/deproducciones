@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     @yield('head')
-    <link href="public/icons/css/fontello.7.css" rel="stylesheet">
+    <link href="/public/icons/css/fontello.7.css" rel="stylesheet">
     {{-- {!! HTML::style('public/icons/css/fontello.7.css') !!} --}}
 
     <link rel="stylesheet" href="{{ mix('/css/app.css') }}">

@@ -157,7 +157,7 @@ class CategoryController extends Controller
         $category = Category::create([
             'name'        => str_slug($request->name, ''),
             'description' => $request->description,
-            'avatar'      => '/imgs/channel-avatar.png',
+            'avatar'      => '/public/imgs/channel-avatar.png',
         ]);
 
         // subscribes user to category that was just created

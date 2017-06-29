@@ -12,7 +12,7 @@
     </title>
 
     @yield('head')
-    <link href="/icons/css/fontello.6.css" rel="stylesheet">
+    <link href="/public/icons/css/fontello.6.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.3.2/css/bulma.min.css">
 
     <!-- CSRF Token -->

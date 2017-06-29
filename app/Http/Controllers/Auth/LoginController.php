@@ -70,11 +70,17 @@ class LoginController extends Controller
      */
     public function handleFacebookCallback()
     {
+
         try {
             $user = Socialite::driver('facebook')->user();
         } catch (\Exception $e) {
-            return redirect('/');
+
+            echo($e->xdebug_message);
+            exit();
+
+            // return redirect('/');
         }
+
 
         $authUser = $this->findOrCreateUser($user);
 
@@ -122,9 +128,20 @@ class LoginController extends Controller
      */
     private function findOrCreateUser($providerUser)
     {
+
+
+        // var_dump($providerUser);
+        // exit();
+
+
+
         if ($authUser = User::where('email', $providerUser->email)->first()) {
             return $authUser;
         }
+
+
+
+
 
         $user = User::create([
             'username'  => $this->generateUsername($providerUser),

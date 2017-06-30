@@ -2,6 +2,7 @@ import AdminPanelSuggestedCategories from './components/AdminPanelSuggestedCateg
 import BookmarkedCategories from './components/BookmarkedCategories.vue';
 import SubmissionRedirector from './components/SubmissionRedirector.vue';
 import CategorySubmissions from './components/CategorySubmissions.vue';
+import ProfessionSubmissions from './components/ProfessionSubmissions.vue';
 import BookmarkedComments from './components/BookmarkedComments.vue';
 import AdminPanelCategory from './components/AdminPanelCategory.vue';
 import BookmarkedUsers from './components/BookmarkedUsers.vue';
@@ -21,6 +22,7 @@ import Help from './components/Help.vue';
 import Home from './components/Home.vue';
 import Submit from './components/Submit.vue';
 import Category from './components/Category.vue';
+import Profession from './components/Profession.vue';
 import UserPage from './components/UserPage.vue';
 import AdminPanelUsers from './components/AdminPanelUsers.vue';
 import CategorySettings from './components/CategorySettings.vue';
@@ -137,6 +139,14 @@ const routes = [
             },
         ]
     },
+
+    {
+        path: '/p/:slug',
+        component: Profession,
+        name: 'profession'
+    },
+
+
 
 
 

@@ -27,6 +27,7 @@ trait CachableUser
 
             'hiddenSubmissions' => $user->hiddenSubmissions(),
             'subscriptions'     => $user->subscriptions->pluck('id'),
+            'profession-subscriptions'     => $user->professions->pluck('id'),
 
             'blockedUsers' => $user->blockedUsers(),
 
@@ -374,6 +375,22 @@ trait CachableUser
         return json_decode($result['subscriptions']);
     }
 
+
+    protected function professionSubscriptions($id = 0)
+    {
+        if ($id === 0) {
+            $id = Auth::id();
+        }
+
+        if ($value = Redis::hget('user.'.$id.'.data', 'profession-subscriptions')) {
+            return json_decode($value);
+        }
+
+        $result = $this->cacheUserData($id);
+
+        return json_decode($result['profession-subscriptions']);
+    }
+
     /**
      * updates the hiddenSubmissions records of the auth user.
      *
@@ -399,6 +416,28 @@ trait CachableUser
 
         Redis::hset('user.'.$id.'.data', 'subscriptions', json_encode($subscriptions));
     }
+
+
+    protected function updateProfessionSubscriptions($id, $profession_id, $newSubscribe = true)
+    {
+
+        $subscriptions = $this->professionSubscriptions($id);
+
+        if ($newSubscribe === true) {
+            array_push($subscriptions, $profession_id);
+        } else {
+            $subscriptions = array_values(array_diff($subscriptions, [$profession_id]));
+        }
+
+        // we need to make sure the cached data exists
+        if (!Redis::hget('user.'.$id.'.data', 'profession-subscriptions')) {
+            $this->cacheUserData($id);
+        }
+
+        Redis::hset('user.'.$id.'.data', 'profession-subscriptions', json_encode($subscriptions));
+    }
+
+
 
     /**
      * Returns the IDs of auth uers's upvoted submissions.
@@ -569,6 +608,19 @@ trait CachableUser
 
         Redis::hincrby('user.'.$id.'.data', 'submissionsCount', $number);
     }
+
+
+    protected function updateUserProfessionsCount($id, $number = 1)
+    {
+        // we need to make sure the cached data exists
+        if (!Redis::hget('user.'.$id.'.data', 'submissionsCount')) {
+            $this->cacheUserData($id);
+        }
+
+        Redis::hincrby('user.'.$id.'.data', 'submissionsCount', $number);
+    }
+
+
 
     /**
      * updates the commentsCount of the author user.

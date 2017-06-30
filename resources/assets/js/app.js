@@ -9,6 +9,7 @@ require('./bootstrap')
  */
 window.Store = {
     category: [],
+    profession: [],
     user: [],
 
     submissionUpVotes: [],
@@ -20,6 +21,7 @@ window.Store = {
     submissionBookmarks: [],
     commentBookmarks: [],
     categoryBookmarks: [],
+    professionBookmarks: [],
     userBookmarks: [],
 
     blockedUsers: [],
@@ -37,7 +39,8 @@ window.Store = {
     sidebarFilter: '',
 
     subscribedCategories: [],
-    userProfessions: [],
+    subscribedProfessions: [],
+    // userProfessions: [],
 
     loading: true,
 }

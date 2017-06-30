@@ -27,6 +27,15 @@ class Profession extends Model
     protected static $recordEvents = ['created'];
 
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_professions', 'profession_id', 'user_id');
+    }
+
+    public function submissions()
+    {
+        return $this->belongsToMany(Submission::class, 'profession_submissions', 'profession_id', 'submission_id');
+    }
 
     /**
      * Get the indexable data array for the model.

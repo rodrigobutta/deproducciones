@@ -26,7 +26,7 @@
         ]); ?>
     </script>
 
-    <link rel="shortcut icon" href="/imgs/favicon.png">
+    <link rel="shortcut icon" href="/public/imgs/favicon.png">
     @include('user.user-style')
 </head>
 

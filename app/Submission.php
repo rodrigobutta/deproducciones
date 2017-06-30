@@ -76,6 +76,14 @@ class Submission extends Model
         return $this->hasMany(Comment::class);
     }
 
+
+    public function professions()
+    {
+        return $this->belongsToMany(Profession::class, 'profession_submissions', 'submission_id', 'profession_id');
+    }
+
+
+
     /**
      * Load a threaded set of comments for the post.
      *

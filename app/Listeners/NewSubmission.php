@@ -33,5 +33,11 @@ class NewSubmission
         $this->updateUserSubmissionsCount($event->submission->user_id);
 
         $this->updateCategorySubmissionsCount($event->submission->category_id);
+
+        foreach ($event->submission->professions as $p) {
+            $this->updateProfessionSubmissionsCount($p->id);
+        }
+
+
     }
 }

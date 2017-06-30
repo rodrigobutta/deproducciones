@@ -40,6 +40,10 @@ class DestroyedSubmission
 
         $this->updateCategorySubmissionsCount($event->submission->category_id, -1);
 
+        foreach ($event->submission->professions as $p) {
+            $this->updateProfessionSubmissionsCount($p->id, -1);
+        }
+
         $this->removeSubmissionFromCache($event->submission);
 
         Report::where([

@@ -281,6 +281,52 @@ const app = new Vue({
             });
         },
 
+
+        /**
+         * Fetches the info about the category which we need later
+         *
+         * @return void
+         * @param string name
+         */
+        getProfessionStore(slug) {
+            // if landed on a submission page
+            if (preload.profession && preload.profession.slug == this.$route.params.slug) {
+                Store.profession = preload.profession;
+                delete preload.profession;
+                return;
+            }
+
+            axios.get('/get-profession-store', {
+                params: {
+                    slug: slug
+                }
+            }).then((response) => {
+                Store.profession = response.data
+
+                // update the profession in the user's subscriptions (avatar might have changed)
+                let profession_id = Store.profession.id
+                function findObject(ob) {
+                    return ob.id === profession_id
+                }
+
+                // let i = Store.professions.findIndex(findObject)
+
+                // if (i != -1 && Store.professions[i].avatar != response.data.avatar) {
+                //     Store.professions[i].avatar = response.data.avatar
+                //     this.putLS('professions', Store.professions)
+                // }
+
+            }).catch((error) => {
+
+                console.error(error);
+
+                if (error.response.status === 404) {
+                    this.$router.push('/404')
+                }
+            });
+        },
+
+
         /**
          * Runned at the page load, sets the default valie for this.sidebar
          *

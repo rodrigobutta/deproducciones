@@ -3,20 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Activity;
-use App\Category;
-use App\CategoryForbiddenName;
-use App\Events\CategoryWasUpdated;
+use App\Profession;
+use App\ProfessionForbiddenName;
+use App\Events\ProfessionWasUpdated;
 use App\Filters;
 use App\Submission;
-use App\Traits\CachableCategory;
+use App\Traits\CachableProfession;
 use App\Traits\CachableUser;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class ProfessionController extends Controller
 {
-    use Filters, CachableUser, CachableCategory;
+    use Filters, CachableUser, CachableProfession;
 
     /**
      * makes sure the user is logged in.
@@ -25,107 +25,60 @@ class CategoryController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['show', 'submissions', 'getCategory', 'moderators', 'fillStore', 'redirect']]);
+        // $this->middleware('auth', ['except' => ['show', 'getProfession', 'fillStore', 'redirect']]);
+        $this->middleware('auth', ['except' => ['show', 'submissions', 'getProfession', 'fillStore', 'redirect']]);
     }
 
-    /**
-     * gets submissions.
-     *
-     * @param string $category
-     *
-     * @return Illuminate\Support\Collection
-     */
-    protected function getSubmissions($category, $sort)
-    {
-        $submissions = (new Submission())->newQuery();
 
-        $submissions->where('category_name', $category);
 
-        // exclude user's hidden submissions
-        if (Auth::check()) {
-            $submissions->whereNotIn('id', $this->hiddenSubmissions());
-        }
 
-        // exclude NSFW if user doens't want to see them or if the user is not authinticated
-        if (!Auth::check() || !settings('nsfw')) {
-            $submissions->where('nsfw', false);
-        }
-
-        if ($sort == 'new') {
-            $submissions->orderBy('created_at', 'desc');
-        }
-
-        if ($sort == 'rising') {
-            $submissions->where('created_at', '>=', Carbon::now()->subHour())
-                        ->orderBy('rate', 'desc');
-        }
-
-        if ($sort == 'hot') {
-            $submissions->orderBy('rate', 'desc');
-        }
-
-        return $submissions->simplePaginate(10);
-    }
-
-    /**
-     * Get submissions API with ajax calls.
-     *
-     * @param Illuminate\Http\Request $request
-     *
-     * @return Illuminate\Support\Collection
-     */
-    public function submissions(Request $request)
-    {
-        $this->validate($request, [
-            'sort'     => 'alpha_num|max:25',
-            'page'     => 'Integer',
-            'category' => 'required|alpha_num|max:25',
-        ]);
-
-        return $this->getSubmissions($request->category, $request->sort);
-    }
 
     /**
      * shows the submission page to guests.
      *
-     * @param string $category
+     * @param string $profession
      * @param string $slug
      *
      * @return view
      */
-    public function show($category, Request $request)
+    public function show($slug, Request $request)
     {
+
         if (Auth::check()) {
             return view('welcome');
         }
 
-        $submissions = $this->getSubmissions($category, $request->sort || 'hot');
-        $category = $this->getCategoryByName($category);
-        $category->stats = $this->categoryStats($category->id);
+        $profession = $this->getProfessionBySlug($slug);
 
-        return view('category.show', compact('submissions', 'category'));
+        $profession->stats = $this->professionStats($profession->id);
+
+        $submissions = $profession->submissions;
+
+
+
+        return view('profession.show', compact('profession','submissions'));
     }
 
     /**
-     * Returns all the nesseccary information to fill the categoryStore on front-end.
+     * Returns all the nesseccary information to fill the professionStore on front-end.
      *
      * @return Collection
      */
     public function fillStore(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required',
+            'slug' => 'required',
         ]);
 
-        $category = $this->getCategoryByName($request->name);
+        $profession = $this->getProfessionBySlug($request->slug);
 
-        $category->stats = $this->categoryStats($category->id);
+        $profession->stats = $this->professionStats($profession->id);
 
-        return $category;
+        return $profession;
     }
 
     /**
-     * Creates a new category.
+     * Creates a new profession.
      *
      * @param Illuminate\Http\Request $request
      *
@@ -154,22 +107,22 @@ class CategoryController extends Controller
             return response('This name is forbidden. Please pick another one.', 500);
         }
 
-        $category = Category::create([
+        $profession = Profession::create([
             'name'        => str_slug($request->name, ''),
             'description' => $request->description,
             'avatar'      => '/public/imgs/channel-avatar.png',
         ]);
 
-        // subscribes user to category that was just created
-        $user->subscriptions()->toggle($category->id);
-        $this->updateSubscriptions($user->id, $category->id, true);
+        // subscribes user to profession that was just created
+        $user->subscriptions()->toggle($profession->id);
+        $this->updateSubscriptions($user->id, $profession->id, true);
 
-        // Set the creator of category as the administrator of it
-        $user->categoryRoles()->attach($category, [
+        // Set the creator of profession as the administrator of it
+        $user->professionRoles()->attach($profession, [
             'role' => 'administrator',
         ]);
 
-        return $category;
+        return $profession;
     }
 
     /**
@@ -179,11 +132,11 @@ class CategoryController extends Controller
      */
     protected function isForbiddenName($name)
     {
-        return CategoryForbiddenName::where('name', $name)->exists();
+        return ProfessionForbiddenName::where('name', $name)->exists();
     }
 
     /**
-     * Whether or the user is breaking the time limit for creating another category.
+     * Whether or the user is breaking the time limit for creating another profession.
      *
      * @return mixed
      */
@@ -195,9 +148,9 @@ class CategoryController extends Controller
         }
 
         $lastCreated = Activity::where([
-            ['subject_type', 'App\Category'],
+            ['subject_type', 'App\Profession'],
             ['user_id', Auth::user()->id],
-            ['name', 'created_category'],
+            ['name', 'created_profession'],
         ])->orderBy('created_at', 'desc')->first();
 
         if ($lastCreated) {
@@ -212,7 +165,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * Patches the category model with recently send info.
+     * Patches the profession model with recently send info.
      *
      * @param Illuminate\Support\Request $request
      *
@@ -226,17 +179,17 @@ class CategoryController extends Controller
             'color'       => 'required|in:Dark Blue,Blue,Red,Dark,Pink,Dark Green,Bright Green,Purple,Gray,Orange',
         ]);
 
-        $category = $this->getCategoryByName($request->name);
+        $profession = $this->getProfessionByName($request->name);
 
-        abort_unless($this->mustBeAdministrator($category->id), 403);
+        abort_unless($this->mustBeAdministrator($profession->id), 403);
 
-        $category->update([
+        $profession->update([
             'description' => $request->description,
             'color'       => $request->color,
             'nsfw'        => ($request->nsfw ? true : false),
         ]);
 
-        event(new CategoryWasUpdated($category));
+        event(new ProfessionWasUpdated($profession));
 
         return response('The channel has been successfully updated', 200);
     }
@@ -254,54 +207,37 @@ class CategoryController extends Controller
             'name' => 'required|alpha_num|max:25',
         ]);
 
-        return Category::where('name', 'like', '%'.$request->name.'%')
+        return Profession::where('name', 'like', '%'.$request->name.'%')
                     ->orderBy('subscribers', 'desc')
                     ->select('name')->take(100)->get()->pluck('name');
     }
 
     /**
-     * looks for the category by its name.
+     * looks for the profession by its name.
      *
      * @param Request $request [name]
      *
-     * @return [Collection] category
+     * @return [Collection] profession
      */
-    public function getCategory(Request $request)
+    public function getProfession(Request $request)
     {
         $this->validate($request, [
             'name' => 'required',
         ]);
 
-        return $this->getCategoryByName($request->name);
+        return $this->getProfessionByName($request->name);
     }
 
     /**
-     * @param App\Category $category
+     * @param App\Profession $profession
      *
      * @return bool
      */
-    protected function isNSWF($category)
+    protected function isNSWF($profession)
     {
-        return $category->nsfw == 1 && Auth::user()->settings['nsfw'] == 0;
+        return $profession->nsfw == 1 && Auth::user()->settings['nsfw'] == 0;
     }
 
-    /**
-     * returns all the user models moderating the category.
-     *
-     * @param Illuminate\Http\Request $request
-     *
-     * @return Illuminate\Support\Collection
-     */
-    public function moderators(Request $request)
-    {
-        $this->validate($request, [
-            'name' => 'required',
-        ]);
-
-        $category = $this->getCategoryByName($request->name);
-
-        return $category->moderators;
-    }
 
     /**
      * redirects old channel URLs (/c/channel/hot) to the new one (/c/channel). This is just to
@@ -310,8 +246,8 @@ class CategoryController extends Controller
      *
      * @return redirect
      */
-    public function redirect($category)
+    public function redirect($profession)
     {
-        return redirect('/c/'.$category);
+        return redirect('/c/'.$profession);
     }
 }

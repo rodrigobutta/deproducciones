@@ -226,4 +226,5 @@ trait CachableCategory
             return Category::whereIn('id', $ids)->get();
         });
     }
+
 }

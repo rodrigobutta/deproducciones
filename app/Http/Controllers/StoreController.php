@@ -38,7 +38,9 @@ class StoreController extends Controller
             'bookmarkedCategories'        => $this->bookmarkedCategories(), // cached
             'bookmarkedUsers'             => $this->bookmarkedUsers(), // cached
             'subscribedCategories'        => $this->subscribedCategories($request->sidebar_filter),
-            'userProfessions'               => $this->userProfessions(),
+            'subscribedProfessions'        => $this->subscribedProfessions(),
+            // 'professions'               => $this->professions(),
+            // 'userProfessions'               => $this->userProfessions(),
             'moderatingCategories'        => $this->moderatingCategories(),
             'moderatingCategoriesRecords' => $this->moderatingCategoriesRecords(),
             'blockedUsers'                => $this->blockedUsers(), // cached
@@ -97,12 +99,31 @@ class StoreController extends Controller
         return Auth::user()->subscriptions;
     }
 
-
-    // returns subscriptions of Auth user
-    protected function userProfessions()
+    protected function subscribedProfessions()
     {
+        if (!Auth::check()) {
+            return view('welcome');
+        }
+
+        // $filter == "subscribed channels"
         return Auth::user()->professions;
     }
+
+
+    // // returns subscriptions of Auth user
+    // protected function professions()
+    // {
+    //     // if (!Auth::check()) {
+    //         return $this->getProfessions();
+    //     // }
+    // }
+
+
+    // returns subscriptions of Auth user
+    // protected function userProfessions()
+    // {
+    //     return Auth::user()->professions;
+    // }
 
 
 

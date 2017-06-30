@@ -132,6 +132,10 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/subscribe', 'SubscribeController@subscribeToggle');
     Route::get('/is-subscribed', 'SubscribeController@isSubscribed');
 
+    Route::post('/profession-subscribe', 'ProfessionSubscribeController@subscribeToggle');
+    Route::get('/profession-is-subscribed', 'ProfessionSubscribeController@isSubscribed');
+
+
     // report
     Route::post('/report-comment', 'ReportsController@comment');
     Route::post('/report-submission', 'ReportsController@submission');
@@ -162,6 +166,7 @@ Route::get('/search', 'SearchController@index');
 Route::get('/home', 'HomeController@feed');
 Route::get('/category-submissions', 'CategoryController@submissions');
 Route::get('/get-category-store', 'CategoryController@fillStore');
+Route::get('/get-profession-store', 'ProfessionController@fillStore');
 Route::get('/suggested-category', 'SuggestionController@category');
 Route::get('/get-user-store', 'UserController@fillStore');
 Route::get('/user-submissions', 'UserController@submissions');

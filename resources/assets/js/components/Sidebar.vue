@@ -18,7 +18,7 @@
 
 
         <ul class="menu-list">
-            <li v-for="profession in Store.userProfessions">
+            <li v-for="profession in Store.subscribedProfessions">
                 <router-link :to="'/p/' + profession.slug">
                     <span class="v-channels-text">{{ profession.title }}</span>
                 </router-link>

@@ -17,6 +17,8 @@ Route::group(['middleware' => ['maintenance', 'http2']], function () {
     Route::get('/c/{category}/hot', 'CategoryController@redirect');
     Route::get('/c/{category}/{slug}', 'SubmissionController@show');
 
+    Route::get('/p/{profession}', 'ProfessionController@show');
+
     Route::get('/@{username}', 'UserController@showSubmissions');
     Route::get('/@{username}/comments', 'UserController@showComments');
 

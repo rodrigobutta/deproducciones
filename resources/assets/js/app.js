@@ -37,6 +37,7 @@ window.Store = {
     sidebarFilter: '',
 
     subscribedCategories: [],
+    userProfessions: [],
 
     loading: true,
 }

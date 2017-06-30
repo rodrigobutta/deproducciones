@@ -8,6 +8,7 @@ use App\Filters;
 use App\Submission;
 use App\Traits\CachableUser;
 use App\User;
+use App\Profession;
 use Illuminate\Http\Request;
 
 class SearchController extends Controller
@@ -44,6 +45,11 @@ class SearchController extends Controller
             if ($request->type == 'Users') {
                 return User::search($request->searched)->take(20)->get();
             }
+
+            if ($request->type == 'Professions') {
+                return Profession::search($request->searched)->take(20)->get();
+            }
+
         } catch (\Exception $exception) {
             app('sentry')->captureException($exception);
 

@@ -15,7 +15,7 @@
 						</router-link>
 
 						<router-link tag="li" :to="{ path: '/?sort=rising' }" class="item" :class="{ 'active': sort == 'rising' }">
-							Rising
+							Rising22
 						</router-link>
 					</ul>
 				</div>

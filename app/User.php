@@ -101,6 +101,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Category::class, 'subscriptions');
     }
 
+    public function professions()
+    {
+        return $this->belongsToMany(Profession::class, 'user_professions', 'user_id', 'profession_id');
+    }
+
     /* --------------------------------------------------------------------- */
     /* -------------------------- Home Feed methods ------------------------ */
     /* --------------------------------------------------------------------- */

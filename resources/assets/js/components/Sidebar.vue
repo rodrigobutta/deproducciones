@@ -15,6 +15,16 @@
             <div class="profile-card-status">{{ auth.name }}</div>
         </div>
 
+
+
+        <ul class="menu-list">
+            <li v-for="profession in Store.userProfessions">
+                <router-link :to="'/p/' + profession.slug">
+                    <span class="v-channels-text">{{ profession.title }}</span>
+                </router-link>
+            </li>
+        </ul>
+
         <hr>
 
         <div class="v-side-quick-actions">
@@ -99,6 +109,7 @@
     				</router-link>
                 </li>
             </ul>
+
         </aside>
     </div>
 </template>
@@ -170,6 +181,7 @@ export default {
 				return category.name.indexOf(self.subscribedFilter.toLowerCase()) !== -1
 			}), 'subscribers', 'desc').slice(0, (this.categoriesLimit > 2 ? this.categoriesLimit : 2))
     	},
+
     },
 
     methods: {

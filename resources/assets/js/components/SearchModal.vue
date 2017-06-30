@@ -40,6 +40,13 @@
 							<span>Comments</span>
 						</a>
 					</li>
+
+                    <li :class="{ 'is-active--green': type == 'Professions'}">
+                        <a class="h-green" @click="changeType('Professions')">
+                            <span>Professions</span>
+                        </a>
+                    </li>
+
 				</ul>
 			</div>
 
@@ -56,6 +63,7 @@
 	    	<div class="v-push-20"></div>
 
 	        <div class="col-7 user-select">
+
 	            <ul class="v-contact-list" v-if="type == 'Categories'">
 	            	<category-search-item v-for="category in categories" :list="category" :key="category.id"></category-search-item>
 	            </ul>
@@ -64,6 +72,7 @@
 	            	No #channel matched your keywords
 	            </h1>
 
+
 	            <ul class="v-search-items" v-if="type == 'Users'">
 	            	<user-search-item v-for="user in users" :list="user" :key="user.id"></user-search-item>
 	            </ul>
@@ -71,6 +80,16 @@
 	            <h1 class="align-center" v-if="noUsers && filter">
 	            	No user matched your keywords
 	            </h1>
+
+
+                <ul class="v-contact-list" v-if="type == 'Professions'">
+                    <profession-search-item v-for="profession in professions" :list="profession" :key="profession.id"></profession-search-item>
+                </ul>
+
+                <h1 class="align-center" v-if="noProfessions && filter">
+                    No profession matched your keywords
+                </h1>
+
 
 	            <div v-if="type == 'Submissions'">
 			        <submission v-for="submission in submissions" :list="submission" :key="submission.id"></submission>
@@ -89,6 +108,8 @@
 		            	No comment matched your keywords
 		            </h1>
 		    	</div>
+
+
 	        </div>
 	    </div>
 	</div>
@@ -96,6 +117,7 @@
 
 <script>
 import CategorySearchItem from '../components/CategorySearchItem.vue';
+import ProfessionSearchItem from '../components/ProfessionSearchItem.vue';
 import UserSearchItem from '../components/UserSearchItem.vue';
 import Submission from '../components/Submission.vue';
 import Comment from '../components/Comment.vue';
@@ -109,6 +131,7 @@ export default {
 
 	components: {
 		CategorySearchItem,
+        ProfessionSearchItem,
 		Comment,
 		Submission,
 		MoonLoader,
@@ -126,6 +149,7 @@ export default {
 			categories: [],
 			users: [],
 			submissions: [],
+            professions: [],
 			comments: [],
 			type: 'Categories',
 		}
@@ -153,7 +177,11 @@ export default {
 
 		noUsers() {
 			return this.type == 'Users' && this.users.length == 0;
-		}
+		},
+
+        noProfessions() {
+            return this.type == 'Professions' && this.professions.length == 0;
+        }
 	},
 
 	methods: {
@@ -186,6 +214,10 @@ export default {
             	if( this.type == 'Submissions' ) {
             		this.submissions = response.data;
             	}
+
+                if( this.type == 'Professions' ) {
+                    this.professions = response.data;
+                }
 
             	this.loading = false;
             }).catch((error) => {

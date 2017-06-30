@@ -31,6 +31,7 @@ export default {
                 Store.categoryBookmarks = response.data.bookmarkedCategories
                 Store.userBookmarks = response.data.bookmarkedUsers
                 Store.subscribedCategories = response.data.subscribedCategories
+                Store.userProfessions = response.data.userProfessions
                 Store.moderatingCategories = response.data.moderatingCategories
                 Store.blockedUsers = response.data.blockedUsers
 

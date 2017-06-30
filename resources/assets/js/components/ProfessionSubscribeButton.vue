@@ -52,9 +52,9 @@ export default {
             if ( this.subscribed ) {
             	Store.subscribedProfessions.push(Store.profession)
 
-            	Store.profession.stats.subscribersCount ++
+            	Store.profession.stats.usersCount ++
             } else {
-            	Store.profession.stats.subscribersCount --
+            	Store.profession.stats.usersCount --
 
             	let removeItem = Store.profession.id
 				Store.subscribedProfessions = Store.subscribedProfessions.filter(function (profession) {

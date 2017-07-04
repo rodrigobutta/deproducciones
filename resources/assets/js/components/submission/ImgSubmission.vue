@@ -10,6 +10,7 @@
 		</div>
 
 		<div class="link-list-info">
+
 			<span class="submission-img-title">
 				<a class="submisison-small-thumbnail" v-if="submission.data.thumbnail_path && !full">
 					<!-- img -->
@@ -27,6 +28,7 @@
 					></submission-footer>
 				</div>
 			</span>
+
 		</div>
 	</div>
 </template>

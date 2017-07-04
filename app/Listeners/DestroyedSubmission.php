@@ -40,7 +40,7 @@ class DestroyedSubmission
 
         $this->updateCategorySubmissionsCount($event->submission->category_id, -1);
 
-        foreach ($event->submission->professions as $p) {
+        foreach ($event->submission->wantsFor as $p) {
             $this->updateProfessionSubmissionsCount($p->id, -1);
         }
 

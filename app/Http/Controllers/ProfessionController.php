@@ -52,7 +52,7 @@ class ProfessionController extends Controller
 
         $profession->stats = $this->professionStats($profession->id);
 
-        $submissions = $profession->submissions;
+        $submissions = $profession->wantedBy;
 
 
 

@@ -22,7 +22,7 @@ trait CachableProfession
         $profession = Profession::where('id', $id)->firstOrFail();
 
         $professionData = [
-            'submissionsCount' => $profession->submissions()->count(),
+            'submissionsCount' => $profession->wantedBy()->count(),
             'usersCount' => $profession->users()->count()
         ];
 

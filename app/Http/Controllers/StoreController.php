@@ -39,8 +39,6 @@ class StoreController extends Controller
             'bookmarkedUsers'             => $this->bookmarkedUsers(), // cached
             'subscribedCategories'        => $this->subscribedCategories($request->sidebar_filter),
             'subscribedProfessions'        => $this->subscribedProfessions(),
-            // 'professions'               => $this->professions(),
-            // 'userProfessions'               => $this->userProfessions(),
             'moderatingCategories'        => $this->moderatingCategories(),
             'moderatingCategoriesRecords' => $this->moderatingCategoriesRecords(),
             'blockedUsers'                => $this->blockedUsers(), // cached
@@ -108,24 +106,6 @@ class StoreController extends Controller
         // $filter == "subscribed channels"
         return Auth::user()->professions;
     }
-
-
-    // // returns subscriptions of Auth user
-    // protected function professions()
-    // {
-    //     // if (!Auth::check()) {
-    //         return $this->getProfessions();
-    //     // }
-    // }
-
-
-    // returns subscriptions of Auth user
-    // protected function userProfessions()
-    // {
-    //     return Auth::user()->professions;
-    // }
-
-
 
     /**
      * returns categoeis for sidebar.

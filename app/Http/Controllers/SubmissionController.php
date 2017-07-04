@@ -61,6 +61,10 @@ class SubmissionController extends Controller
         $submission->category->stats = $this->categoryStats($submission->category->id);
         // $submission->category = $category;
 
+        // var_dump($submission->wantsFor);
+        // exit();
+
+
         return view('submission.show', compact('submission'));
     }
 

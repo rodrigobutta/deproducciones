@@ -25,7 +25,7 @@ class Submission extends Model
         'data' => 'json',
     ];
 
-    protected $with = ['owner','category', 'professions'];
+    protected $with = ['owner','category', 'wantsFor'];
 
     protected static $recordEvents = ['created'];
 
@@ -77,9 +77,9 @@ class Submission extends Model
     }
 
 
-    public function professions()
+    public function wantsFor()
     {
-        return $this->belongsToMany(Profession::class, 'profession_submissions', 'submission_id', 'profession_id');
+        return $this->belongsToMany(Profession::class, 'wanted', 'submission_id', 'profession_id');
     }
 
 

@@ -32,9 +32,9 @@ class Profession extends Model
         return $this->belongsToMany(User::class, 'user_professions', 'profession_id', 'user_id');
     }
 
-    public function submissions()
+    public function wantedBy()
     {
-        return $this->belongsToMany(Submission::class, 'profession_submissions', 'profession_id', 'submission_id');
+        return $this->belongsToMany(Submission::class, 'wanted', 'profession_id', 'submission_id');
     }
 
     /**

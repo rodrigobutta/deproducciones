@@ -37,9 +37,9 @@
     @include('app-header')
 
     <div class="v-content-wrapper">
-		<div class="v-side" v-show="sidebar">
+		{{-- <div class="v-side" v-show="sidebar">
 		    <guest-sidebar></guest-sidebar>
-		</div>
+		</div> --}}
 
 		<search-modal v-if="Store.contentRouter == 'search'" :sidebar="sidebar"></search-modal>
 

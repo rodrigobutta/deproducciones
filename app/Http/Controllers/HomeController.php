@@ -23,8 +23,13 @@ class HomeController extends Controller
      */
     public function homePage(Request $request)
     {
+
         if (!Auth::check()) {
             $submissions = $this->guestHome($request);
+
+
+            // var_dump($submissions->toJson());
+            // exit();
 
             return view('home', compact('submissions'));
         }
@@ -41,8 +46,12 @@ class HomeController extends Controller
      */
     public function feed(Request $request)
     {
+        // var_dump('feed');
+        // exit();
+
+
         $this->validate($request, [
-            'sort' => 'required|in:hot,new,rising',
+            'sort' => 'required|in:hot,new,relevant',
             'page' => 'required|integer',
         ]);
 
@@ -51,6 +60,9 @@ class HomeController extends Controller
         }
 
         $submissions = (new Submission())->newQuery();
+
+
+        // $submissions = $submissions->join('categories', 'submissions.category_id', '=', 'categories.id');
 
         // spicify the filter:
         if ($request->filter == 'all-channels') {
@@ -64,6 +76,8 @@ class HomeController extends Controller
         } else { // $request->filter == "subscribed channels"
             $submissions->whereIn('category_id', $this->subscriptions());
         }
+
+
 
         // exclude user's hidden submissions
         $submissions->whereNotIn('id', $this->hiddenSubmissions());
@@ -85,14 +99,18 @@ class HomeController extends Controller
             $submissions->orderBy('created_at', 'desc');
         }
 
-        if ($request->sort == 'rising') {
-            $submissions->where('created_at', '>=', Carbon::now()->subHour())
-                        ->orderBy('rate', 'desc');
+        if ($request->sort == 'relevant') {
+            // $submissions->where('created_at', '>=', Carbon::now()->subHour())
+            //             ->orderBy('rate', 'desc');
+
+            $submissions->orderBy('comments_number', 'desc');
         }
 
         if ($request->sort == 'hot') {
             $submissions->orderBy('rate', 'desc');
         }
+
+        // var_dump($submissions->simplePaginate(10));
 
         return $submissions->simplePaginate(10);
     }
@@ -116,9 +134,10 @@ class HomeController extends Controller
 
         if ($request->sort == 'new') {
             $submissions->orderBy('created_at', 'desc');
-        } elseif ($request->sort == 'rising') {
-            $submissions->where('created_at', '>=', Carbon::now()->subHour())
-                        ->orderBy('rate', 'desc');
+        } elseif ($request->sort == 'relevant') {
+            // $submissions->where('created_at', '>=', Carbon::now()->subHour())
+            //             ->orderBy('rate', 'desc');
+            $submissions->orderBy('comments_number', 'desc');
         } else {
             $submissions->orderBy('rate', 'desc');
         }

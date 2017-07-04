@@ -13,12 +13,11 @@
 			<span class="submission-img-title">
 				<a class="submisison-small-thumbnail" v-if="submission.data.thumbnail_path && !full">
 					<!-- img -->
-					<div v-if="showSmallThumbnail" class="small-thumbnail zoom-in" v-bind:style="thumbnail"
-					@click="$emit('zoom')"></div>
+					<div v-if="showSmallThumbnail" class="small-thumbnail zoom-in" v-bind:style="thumbnail" @click="$emit('zoom')"></div>
 				</a>
 
 				<div class="flex1">
-					<router-link :to="'/c/' + submission.category_name + '/' + submission.slug" class="flex-space v-ultra-bold">
+					<router-link :to="'/c/' + submission.category.name + '/' + submission.slug" class="flex-space v-ultra-bold">
 						{{ submission.title }}
 					</router-link>
 

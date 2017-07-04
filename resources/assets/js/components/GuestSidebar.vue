@@ -6,7 +6,7 @@
 
         <div class="sidebar-offer-wrapper">
         	<h3>
-        		New to Voten?
+        		New to Voten?44
         	</h3>
 
         	<p>

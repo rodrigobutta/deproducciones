@@ -1,4 +1,4 @@
-@extends('layouts.guest')
+@extends('layouts.app')
 
 
 @section('head')
@@ -19,8 +19,8 @@
 		<meta property="og:image" content="/imgs/voten-circle.png">
 		<meta name="twitter:image" content="/imgs/voten-circle.png" />
 	@else
-		<meta property="og:image" content="{{ $submission->data['thumbnail'] ?? $submission->data['path'] ?? '/imgs/voten-circle.png' }}" />
-		<meta name="twitter:image" content="{{ $submission->data['thumbnail'] ?? $submission->data['path'] ?? '/imgs/voten-circle.png' }}" />
+		<meta property="og:image" content="{{ isset($submission->data['thumbnail'])? $submission->data['thumbnail'] : $submission->data['path'] . '/imgs/voten-circle.png' }}" />
+		<meta name="twitter:image" content="{{ isset($submission->data['thumbnail'])? $submission->data['thumbnail'] : $submission->data['path'] . '/imgs/voten-circle.png' }}" />
 	@endif
 @stop
 

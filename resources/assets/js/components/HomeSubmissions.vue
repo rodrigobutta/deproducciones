@@ -69,8 +69,8 @@
 	    	    if (this.$route.query.sort == 'new')
 	    	    	return 'new';
 
-	    	    if (this.$route.query.sort == 'rising')
-	    	    	return 'rising';
+	    	    if (this.$route.query.sort == 'relevant')
+	    	    	return 'relevant';
 
 	    	    return 'hot';
 	    	},
@@ -142,6 +142,8 @@
 				    }
 	            }).then((response) => {
 					this.submissions = [...this.submissions, ...response.data.data]
+
+					console.log(this.submissions);
 
 					if (!this.submissions.length) {
 						this.nothingFound = true

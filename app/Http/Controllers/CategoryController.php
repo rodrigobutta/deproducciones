@@ -35,11 +35,45 @@ class CategoryController extends Controller
      *
      * @return Illuminate\Support\Collection
      */
-    protected function getSubmissions($category, $sort)
+    // protected function getSubmissions($category, $sort)
+    // {
+    //     $submissions = (new Submission())->newQuery();
+
+    //     $submissions->where('category_name', $category);
+
+    //     // exclude user's hidden submissions
+    //     if (Auth::check()) {
+    //         $submissions->whereNotIn('id', $this->hiddenSubmissions());
+    //     }
+
+    //     // exclude NSFW if user doens't want to see them or if the user is not authinticated
+    //     if (!Auth::check() || !settings('nsfw')) {
+    //         $submissions->where('nsfw', false);
+    //     }
+
+    //     if ($sort == 'new') {
+    //         $submissions->orderBy('created_at', 'desc');
+    //     }
+
+    //     if ($sort == 'relevant') {
+    //         $submissions->where('created_at', '>=', Carbon::now()->subHour())
+    //                     ->orderBy('rate', 'desc');
+    //     }
+
+    //     if ($sort == 'hot') {
+    //         $submissions->orderBy('rate', 'desc');
+    //     }
+
+    //     return $submissions->simplePaginate(10);
+    // }
+
+
+
+    protected function getSubmissionsByCategoryId($category_id, $sort)
     {
         $submissions = (new Submission())->newQuery();
 
-        $submissions->where('category_name', $category);
+        $submissions->where('category_id', $category_id);
 
         // exclude user's hidden submissions
         if (Auth::check()) {
@@ -52,12 +86,13 @@ class CategoryController extends Controller
         }
 
         if ($sort == 'new') {
-            $submissions->orderBy('created_at', 'desc');
+            $submissions->orderBy('id', 'desc');
         }
 
-        if ($sort == 'rising') {
-            $submissions->where('created_at', '>=', Carbon::now()->subHour())
-                        ->orderBy('rate', 'desc');
+        if ($sort == 'relevant') {
+            // $submissions->where('created_at', '>=', Carbon::now()->subDay())
+            //             ->orderBy('rate', 'desc');
+            $submissions->orderBy('comments_number', 'desc');
         }
 
         if ($sort == 'hot') {
@@ -66,6 +101,7 @@ class CategoryController extends Controller
 
         return $submissions->simplePaginate(10);
     }
+
 
     /**
      * Get submissions API with ajax calls.
@@ -79,11 +115,30 @@ class CategoryController extends Controller
         $this->validate($request, [
             'sort'     => 'alpha_num|max:25',
             'page'     => 'Integer',
-            'category' => 'required|alpha_num|max:25',
+            // 'category' => 'required|alpha_num|max:25',
         ]);
 
-        return $this->getSubmissions($request->category, $request->sort);
+        $category = $this->getCategoryByName($request->category);
+
+        return $this->getSubmissionsByCategoryId($category->id, $request->sort);
+        // return $this->getSubmissions($request->category_id, $request->sort);
     }
+
+
+
+    // public function submissionsApi(Request $request)
+    // {
+    //     $this->validate($request, [
+    //         'sort'     => 'alpha_num|max:25',
+    //         'page'     => 'Integer',
+    //         // 'category' => 'required|alpha_num|max:25',
+    //     ]);
+
+    //     // return $this->getSubmissions($request->category, $request->sort);
+    //     return $this->getSubmissionsByCategoryId($request->category_id, $request->sort);
+    // }
+
+
 
     /**
      * shows the submission page to guests.

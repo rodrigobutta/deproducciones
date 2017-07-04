@@ -43,6 +43,11 @@ export default {
 
     computed: {
     	loaded () {
+            console.log('loaded');
+            console.log(Store.user.username);
+            console.log(this.$route.params.username);
+
+
     		return Store.user.username == this.$route.params.username
     	}
     }

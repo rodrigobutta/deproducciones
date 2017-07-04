@@ -145,9 +145,9 @@ class SubmissionVotesController extends Controller
             return response('voted successfully ', 200);
         }
 
-        $submission->upvotes = $new_upvotes || $submission->upvotes;
-        $submission->downvotes = $new_downvotes || $submission->downvotes;
-        $submission->rate = rate($new_upvotes || $submission->upvotes, $new_downvotes || $submission->downvotes, $submission->created_at);
+        $submission->upvotes = isset($new_upvotes)? $new_upvotes : $submission->upvotes;
+        $submission->downvotes = isset($new_downvotes)?$new_downvotes : $submission->downvotes;
+        $submission->rate = rate( $submission->upvotes, $submission->downvotes, $submission->created_at);
 
         DB::table('submissions')->where('id', $submission->id)->update([
             'upvotes'   => $submission->upvotes,
@@ -205,9 +205,9 @@ class SubmissionVotesController extends Controller
             return response('voted successfully ', 200);
         }
 
-        $submission->upvotes = $new_upvotes || $submission->upvotes;
-        $submission->downvotes = $new_downvotes || $submission->downvotes;
-        $submission->rate = rate($new_upvotes || $submission->upvotes, $new_downvotes || $submission->downvotes, $submission->created_at);
+        $submission->upvotes = isset($new_upvotes) ? $new_upvotes : $submission->upvotes;
+        $submission->downvotes = isset($new_downvotes)? $new_downvotes : $submission->downvotes;
+        $submission->rate = rate($submission->upvotes, $submission->downvotes, $submission->created_at);
 
         DB::table('submissions')->where('id', $submission->id)->update([
             'upvotes'   => $submission->upvotes,

@@ -14,8 +14,8 @@
 							New
 						</router-link>
 
-						<router-link tag="li" :to="{ path: '/?sort=rising' }" class="item" :class="{ 'active': sort == 'rising' }">
-							Rising22
+						<router-link tag="li" :to="{ path: '/?sort=relevant' }" class="item" :class="{ 'active': sort == 'relevant' }">
+							Relevant
 						</router-link>
 					</ul>
 				</div>
@@ -103,8 +103,8 @@
 	    	    if (this.$route.query.sort == 'new')
 	    	    	return 'new';
 
-	    	    if (this.$route.query.sort == 'rising')
-	    	    	return 'rising';
+	    	    if (this.$route.query.sort == 'relevant')
+	    	    	return 'relevant';
 
 	    	    return 'hot';
 	    	},

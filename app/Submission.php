@@ -25,7 +25,7 @@ class Submission extends Model
         'data' => 'json',
     ];
 
-    protected $with = ['owner'];
+    protected $with = ['owner','category', 'professions'];
 
     protected static $recordEvents = ['created'];
 

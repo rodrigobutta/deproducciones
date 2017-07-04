@@ -2,35 +2,17 @@
 	<div class="link-list-info">
 		<!-- submission page -->
 		<div v-if="full">
-			<h1 class="submission-title">
-				<i class="v-icon v-shocked go-red" aria-hidden="true" v-if="submission.nsfw"
-					data-toggle="tooltip" data-placement="bottom" title="NSFW"
-				></i>
-
-				{{ submission.title }}
-			</h1>
-
+			<h1 class="submission-title"><i class="v-icon v-shocked go-red" aria-hidden="true" v-if="submission.nsfw" data-toggle="tooltip" data-placement="bottom" title="NSFW"></i>{{ submission.title }}</h1>
 			<markdown :text="body" v-if="body && !editing"></markdown>
-
-			<textarea class="form-control v-input-big" rows="3" id="text" placeholder="Text(optional)..." v-show="editing"
-                    v-model="editedBody"
-            ></textarea>
-
-            <button type="submit" class="v-button v-button--green margin-top-1" @click="patch" v-show="editing">
-                Edit
-            </button>
+			<textarea class="form-control v-input-big" rows="3" id="text" placeholder="Text(optional)..." v-show="editing" v-model="editedBody"></textarea>
+            <button type="submit" class="v-button v-button--green margin-top-1" @click="patch" v-show="editing">Edit</button>
             <button type="submit" class="v-button v-button--red margin-top-1" @click="cancelEditing" v-show="editing">
                 Cancel
             </button>
 		</div>
-
 		<!-- submission indexing pages -->
 		<div v-else>
-			<router-link :to="'/c/' + submission.category_name + '/' + submission.slug"
-			class="flex-space v-ultra-bold">
-				{{ submission.title }}
-			</router-link>
-
+			<router-link :to="'/c/' + submission.category_name + '/' + submission.slug" class="flex-space v-ultra-bold">{{ submission.title }}</router-link>
 			<submission-footer :url="url" :comments="comments" :bookmarked="bookmarked" :submission="submission"
 			@bookmark="$emit('bookmark')" @report="$emit('report')" @hide="$emit('hide')" @nsfw="$emit('nsfw')" @sfw="$emit('sfw')" @destroy="$emit('destroy')" @approve="$emit('approve')" @disapprove="$emit('disapprove')" @removethumbnail="$emit('removethumbnail')" :upvoted="upvoted" :downvoted="downvoted" :points="points"
 			@upvote="$emit('upvote')" @downvote="$emit('downvote')"

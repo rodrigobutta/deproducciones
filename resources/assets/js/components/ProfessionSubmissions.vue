@@ -61,8 +61,8 @@ export default {
     	    if (this.$route.query.sort == 'new')
     	    	return 'new';
 
-    	    if (this.$route.query.sort == 'rising')
-    	    	return 'rising';
+    	    if (this.$route.query.sort == 'relevant')
+    	    	return 'relevant';
 
     	    return 'hot';
     	},

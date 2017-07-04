@@ -37,14 +37,29 @@ class SubmissionController extends Controller
      */
     public function show($category, $slug)
     {
-        if (Auth::check()) {
-            return view('welcome');
-        }
+
+        // var_dump('SubmissionController@show');
+
+
+       // var_dump(Auth::check());
+
+       // $user = Auth::user();
+
+       // var_dump($user);
+
+       // exit();
+
+        // if (Auth::check()) {
+        //     return view('welcome');
+        // }
+
 
         $submission = $this->getSubmissionBySlug($slug);
-        $category = $this->getCategoryByName($submission->category_name);
-        $category->stats = $this->categoryStats($category->id);
-        $submission->category = $category;
+
+        // $category = $submission->category;
+        // $category = $this->getCategoryByName($submission->category_name);
+        $submission->category->stats = $this->categoryStats($submission->category->id);
+        // $submission->category = $category;
 
         return view('submission.show', compact('submission'));
     }
@@ -225,13 +240,19 @@ class SubmissionController extends Controller
             'slug' => 'required',
         ]);
 
+
         $submission = $this->getSubmissionBySlug($request->slug);
 
-        $category = $this->getCategoryByName($submission->category_name);
+        $submission->category->stats = $this->categoryStats($submission->category->id);
 
-        $category->stats = $this->categoryStats($category->id);
 
-        $submission->category = $category;
+        // $submission = $this->getSubmissionBySlug($request->slug);
+
+        // $category = $this->getCategoryByName($submission->category_name);
+
+        // $category->stats = $this->categoryStats($category->id);
+
+        // $submission->category = $category;
 
         return $submission;
     }

@@ -42,11 +42,11 @@ if (!function_exists('firstRate')) {
      */
     function firstRate()
     {
-        $startTime = 1473696439;
-        $created = time();
-        $timeDiff = $created - $startTime;
+        // $startTime = 1473696439;
+        // $created = time();
+        // $timeDiff = $created - $startTime;
 
-        return $timeDiff / 45000;
+        return 0; //$timeDiff / 45000;
     }
 }
 
@@ -62,27 +62,30 @@ if (!function_exists('rate')) {
      */
     function rate($upvotes, $downvotes, $created)
     {
-        $startTime = 1473696439; // strtotime('2016-09-12 16:07:19')
-        $created = strtotime($created);
-        $timeDiff = $created - $startTime;
 
-        $x = $upvotes - $downvotes;
+        return $upvotes - $downvotes;
 
-        if ($x > 0) {
-            $y = 1;
-        } elseif ($x == 0) {
-            $y = 0;
-        } else {
-            $y = -1;
-        }
+        // $startTime = 1473696439; // strtotime('2016-09-12 16:07:19')
+        // $created = strtotime($created);
+        // $timeDiff = $created - $startTime;
 
-        if (abs($x) >= 1) {
-            $z = abs($x);
-        } else {
-            $z = 1;
-        }
+        // $x = $upvotes - $downvotes;
 
-        return (log10($z) * $y) + ($timeDiff / 45000);
+        // if ($x > 0) {
+        //     $y = 1;
+        // } elseif ($x == 0) {
+        //     $y = 0;
+        // } else {
+        //     $y = -1;
+        // }
+
+        // if (abs($x) >= 1) {
+        //     $z = abs($x);
+        // } else {
+        //     $z = 1;
+        // }
+
+        // return (log10($z) * $y) + ($timeDiff / 45000);
     }
 }
 

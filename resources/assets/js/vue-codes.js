@@ -188,6 +188,11 @@ const app = new Vue({
          * @param {String} username
          */
         getUserStore() {
+            console.log('getUserStore');
+
+
+            console.log(preload.user);
+
         	// if landed on the user page as guest
         	if (preload.user) {
         		this.submissions = preload.user;

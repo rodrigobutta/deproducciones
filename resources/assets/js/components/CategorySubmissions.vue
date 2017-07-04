@@ -61,8 +61,8 @@ export default {
     	    if (this.$route.query.sort == 'new')
     	    	return 'new';
 
-    	    if (this.$route.query.sort == 'rising')
-    	    	return 'rising';
+    	    if (this.$route.query.sort == 'relevant')
+    	    	return 'relevant';
 
     	    return 'hot';
     	},
@@ -104,6 +104,7 @@ export default {
     	 * @return void
     	 */
     	clear () {
+
             this.submissions = []
             this.loading = true
             this.nothingFound = false
@@ -121,6 +122,15 @@ export default {
     	 * @return void
     	 */
     	updateCategoryStore () {
+
+
+            // console.log(Store.category);
+
+            // this.$root.getCategoryStore(this.$route.params.name)
+
+
+            console.log(Store.category);
+
     		if (Store.category.name == undefined || Store.category.name != this.$route.params.name) {
 	    		this.$root.getCategoryStore(this.$route.params.name)
     		}
@@ -150,11 +160,13 @@ export default {
 				return;
         	}
 
+
             axios.get(this.authUrl('category-submissions'), {
             	params: {
 			    	sort: this.sort,
 	                page: this.page,
-	                category: this.$route.params.name
+	                category: this.$route.params.name,
+                    // category_id: Store.category.id
 			    }
             }).then((response) => {
 				this.submissions = [...this.submissions, ...response.data.data]

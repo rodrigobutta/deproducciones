@@ -69,11 +69,11 @@
 		</div>
 
 		<span class="desktop-only">
-			Submitted {{ date }} by
+			Submitted33 {{ date }} by
 			<router-link :to="'/' + '@' + submission.owner.username" class="h-underline desktop-only">
 				{{ '@' + submission.owner.username }}
 			</router-link>
-			to <router-link :to="'/c/' + submission.category_name" class="category-label h-underline">#{{ submission.category_name }}</router-link>
+			to <router-link :to="'/c/' + submission.category.name" class="category-label h-underline">#{{ submission.category.name }}</router-link>
 		</span>
 
 		<div class="mobile-only mobile-submission-item-action">
@@ -81,7 +81,7 @@
 			<router-link :to="'/' + '@' + submission.owner.username" class="h-underline">
 				{{ '@' + submission.owner.username }}
 			</router-link>
-			to <router-link :to="'/c/' + submission.category_name" class="category-label h-underline">#{{ submission.category_name }}</router-link>
+			to <router-link :to="'/c/' + submission.category.name" class="category-label h-underline">#{{ submission.category.name }}</router-link>
 		</div>
 	</div>
 </template>

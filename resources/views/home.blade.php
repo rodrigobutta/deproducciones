@@ -7,7 +7,7 @@
 
 
 @section('head')
-	<title>Voten - Social Bookmarking For The 21st Century</title>
+	<title>home.blade</title>
 	<meta property="og:type" content="article" />
 	<meta property="og:title" content="Voten - Social Bookmarking For The 21st Century" />
 	<meta property="og:url" content="{{ config('app.url') }}" />
@@ -45,5 +45,6 @@
 		var preload = {
 			submissions: {!! $submissions->toJson() !!}
 		};
+		// console.log(preload.submissions);
 	</script>
 @endsection

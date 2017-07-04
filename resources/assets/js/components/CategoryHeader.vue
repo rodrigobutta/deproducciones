@@ -83,8 +83,8 @@
 					New
 				</router-link>
 
-				<router-link :to="{ path: '/c/' + $route.params.name + '?sort=rising'  }" class="nav-item is-tab" :class="{ 'is-active': sort == 'rising' }">
-					Rising
+				<router-link :to="{ path: '/c/' + $route.params.name + '?sort=relevant'  }" class="nav-item is-tab" :class="{ 'is-active': sort == 'relevant' }">
+					Relevant
 				</router-link>
 	        </div>
 
@@ -233,8 +233,8 @@ export default {
     	    if (this.$route.query.sort == 'new')
     	    	return 'new';
 
-    	    if (this.$route.query.sort == 'rising')
-    	    	return 'rising';
+    	    if (this.$route.query.sort == 'relevant')
+    	    	return 'relevant';
 
     	    return 'hot';
     	},

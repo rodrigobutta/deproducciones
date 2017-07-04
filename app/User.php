@@ -124,7 +124,7 @@ class User extends Authenticatable
         }]);
     }
 
-    public function feedRising()
+    public function feedRelevant()
     {
         return $this->belongsToMany(Category::class, 'subscriptions')->with(['submissions' => function ($query) {
             $query->orderBy('created_at', 'desc');

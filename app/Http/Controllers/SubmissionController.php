@@ -86,39 +86,39 @@ class SubmissionController extends Controller
         }
 
         // first make sure user is allowed to submit to this category. (not banned from it)
-        if ($this->isUserBanned($user->id, $request->name)) {
-            return response('You have been banned from submitting to #'.$request->name.'. If you think there has been some kind of mistake, please contact the moderators of #'.$request->name.'.', 500);
+        if ($this->isUserBanned($user->id, $request->category_name)) {
+            return response('You have been banned from submitting to #'.$request->category_name.'. If you think there has been some kind of mistake, please contact the moderators of #'.$request->name.'.', 500);
         }
 
-        if ($request->type == 'link') {
-            $this->validate($request, [
-                'url'   => 'required|url',
-                'title' => 'required|between:7,150',
-                'name'  => 'required|exists:categories',
-            ]);
+        // if ($request->type == 'link') {
+        //     $this->validate($request, [
+        //         'url'   => 'required|url',
+        //         'title' => 'required|between:7,150',
+        //         'name'  => 'required|exists:categories',
+        //     ]);
 
-            // check if it's in the blocked domains list
-            if ($this->isDomainBlocked($request->url, $request->name)) {
-                return response("The submitted website is in the channel's blacklist. Please find another source.", 500);
-            }
+        //     // check if it's in the blocked domains list
+        //     if ($this->isDomainBlocked($request->url, $request->category_name)) {
+        //         return response("The submitted website is in the channel's blacklist. Please find another source.", 500);
+        //     }
 
-            try {
-                $data = $this->linkSubmission($request);
-            } catch (\Exception $e) {
-                $data = [
-                    'url'           => $request->url,
-                    'title'         => $request->title,
-                    'description'   => null,
-                    'type'          => 'link',
-                    'embed'         => null,
-                    'img'           => null,
-                    'thumbnail'     => null,
-                    'providerName'  => null,
-                    'publishedTime' => null,
-                    'domain'        => domain($request->url),
-                ];
-            }
-        }
+        //     try {
+        //         $data = $this->linkSubmission($request);
+        //     } catch (\Exception $e) {
+        //         $data = [
+        //             'url'           => $request->url,
+        //             'title'         => $request->title,
+        //             'description'   => null,
+        //             'type'          => 'link',
+        //             'embed'         => null,
+        //             'img'           => null,
+        //             'thumbnail'     => null,
+        //             'providerName'  => null,
+        //             'publishedTime' => null,
+        //             'domain'        => domain($request->url),
+        //         ];
+        //     }
+        // }
 
         // if ($request->type == 'img') {
         //     $this->validate($request, [
@@ -153,20 +153,21 @@ class SubmissionController extends Controller
             $this->validate($request, [
                 'title' => 'required|between:7,150',
                 // 'type'  => 'required|in:link,img,text',
-                'name'  => 'required|exists:categories',
+                'category_name'  => 'required',
             ]);
 
             // $data = $this->textSubmission($request);
         // }
 
-        $category = Category::where('name', $request->name)->select('id', 'nsfw')->firstOrFail();
+        $category = Category::where('name', $request->category_name)->select('id', 'nsfw', 'name')->firstOrFail();
 
         try {
+
             $submission = Submission::create([
                 'title'         => $request->title,
                 'slug'          => $this->slug($request->title),
                 'type'          => $request->type,
-                'category_name' => $request->name,
+                'category_name' => $category->name,
                 'category_id'   => $category->id,
                 'nsfw'          => $category->nsfw,
                 'rate'          => firstRate(),
@@ -178,8 +179,11 @@ class SubmissionController extends Controller
             ]);
 
             event(new SubmissionWasCreated($submission));
+
         } catch (\Exception $exception) {
             app('sentry')->captureException($exception);
+
+            // var_dump($exception);
 
             return response('Ooops, something went wrong', 500);
         }
@@ -189,11 +193,13 @@ class SubmissionController extends Controller
             DB::table('photos')->whereIn('id', $request->input('photos'))->update(['submission_id' => $submission->id]);
         // }
 
-        try {
-            $this->firstVote($user, $submission->id);
-        } catch (\Exception $exception) {
-            app('sentry')->captureException($exception);
-        }
+        // try {
+
+        //     $this->firstVote($user, $submission->id);
+
+        // } catch (\Exception $exception) {
+        //     app('sentry')->captureException($exception);
+        // }
 
         return $submission;
     }
@@ -362,7 +368,7 @@ class SubmissionController extends Controller
      *
      * @return reponse
      */
-    public function patchTextSubmission(Request $request)
+    public function patchWantedSubmission(Request $request)
     {
         $this->validate($request, [
             'id' => 'required|integer',

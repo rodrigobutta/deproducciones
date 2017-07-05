@@ -95,19 +95,21 @@
 
 				<!-- content -->
 				<div class="profile-post-content">
-					<text-submission v-if="list.type == 'text'" :submission="list" :nsfw="nsfw" :full="full"></text-submission>
+					<!-- <text-submission v-if="list.type == 'text'" :submission="list" :nsfw="nsfw" :full="full"></text-submission> -->
 
-					<img-submission v-if="list.type == 'img'" :submission="list" :nsfw="nsfw" :full="full"
+                    <wanted-submission :submission="list" :nsfw="nsfw" :full="full"></wanted-submission>
+
+					<!-- <img-submission v-if="list.type == 'img'" :submission="list" :nsfw="nsfw" :full="full"
 						@zoom="showPhotoViewer"
-					></img-submission>
+					></img-submission> -->
 
-					<gif-submission v-if="list.type == 'gif'" :submission="list" :nsfw="nsfw" :full="full"
+					<!-- gif-submission v-if="list.type == 'gif'" :submission="list" :nsfw="nsfw" :full="full"
 						@play-gif="showGifPlayer"
-					></gif-submission>
+					></gif-submission> -->
 
-					<link-submission v-if="list.type == 'link'" :submission="list" :nsfw="nsfw" :full="full"
+					<!-- <link-submission v-if="list.type == 'link'" :submission="list" :nsfw="nsfw" :full="full"
 						@embed="showEmbed"
-					></link-submission>
+					></link-submission> -->
 				</div>
 
 
@@ -136,10 +138,11 @@
 </template>
 
 <script>
-    import TextSubmission from '../components/submission/TextSubmission.vue';
-    import LinkSubmission from '../components/submission/LinkSubmission.vue';
-    import ImgSubmission from '../components/submission/ImgSubmission.vue';
-    import GifSubmission from '../components/submission/GifSubmission.vue';
+    import WantedSubmission from '../components/submission/WantedSubmission.vue';
+    // import TextSubmission from '../components/submission/TextSubmission.vue';
+    // import LinkSubmission from '../components/submission/LinkSubmission.vue';
+    // import ImgSubmission from '../components/submission/ImgSubmission.vue';
+    // import GifSubmission from '../components/submission/GifSubmission.vue';
 	import PhotoViewer from '../components/PhotoViewer.vue';
 	import EmbedViewer from '../components/Embed.vue';
 	import GifPlayer from '../components/GifPlayer.vue';
@@ -151,10 +154,11 @@
         mixins: [Helpers],
 
         components: {
-            TextSubmission,
-            LinkSubmission,
-            ImgSubmission,
-			GifSubmission,
+            WantedSubmission,
+            // TextSubmission,
+            // LinkSubmission,
+            // ImgSubmission,
+			// GifSubmission,
 			PhotoViewer,
 			EmbedViewer,
 			GifPlayer,

@@ -2,17 +2,27 @@
 
     <div>
 
-    <button type="submit" class="v-button v-button--green margin-top-1" @click="patch" v-show="editing">Save</button>
-    <button type="submit" class="v-button v-button--red margin-top-1" @click="cancelEditing" v-show="editing">Cancel</button>
-
         <div v-if="full">
 
+            <button type="submit" class="v-button v-button--green margin-top-1" @click="patch" v-show="editing">Save</button>
+            <button type="submit" class="v-button v-button--red margin-top-1" @click="cancelEditing" v-show="editing">Cancel</button>
+
+            <!--  titulo en full -->
             <h1 class="submission-title" v-if="submission.title && !editing">
                 <i class="v-icon v-shocked go-red" aria-hidden="true" v-if="submission.nsfw" data-toggle="tooltip" data-placement="bottom" title="NSFW"></i>{{ submission.title }}
             </h1>
+            <!--  titulo en full editable -->
             <textarea class="form-control v-input-big" rows="2" id="title" placeholder="Title.." v-show="editing" v-model="editedTitle"></textarea>
 
+            <!-- foto unica o galeria de fotos en vista full -->
+            <div v-if="!isAlbum && submission.thumbnail">
+                <img v-bind:src="submission.thumbnail" v-bind:alt="submission.title" @click="$emit('zoom')" class="big-thumbnail"/>
+            </div>
+            <div v-if="isAlbum">
+                <img v-bind:src="value.thumbnail_path" v-for="(value, index) in photos" @click="$emit('zoom', index)" v-bind:alt="submission.title" class="big-thumbnail" />
+            </div>
 
+            <!-- drop de fotos e full editable -->
             <div class="form-group" v-show="editing" >
                 <form action="/upload-photo" class="dropzone" method="post" id="addPhotosForm">
                     <input type="hidden" name="_token" v-bind:value="csrf">
@@ -24,67 +34,57 @@
             </div>
 
         </div>
+        <div v-else>
 
+            <!--  titulo en list -->
+            <router-link :to="'/c/' + submission.category.name + '/' + submission.slug" class="flex-space v-ultra-bold">{{ submission.title }}</router-link>
 
+            <!-- foto unica o galeria de fotos en vista list -->
+            <div v-if="!isAlbum && submission.thumbnail">
+                <img v-bind:src="submission.thumbnail" v-bind:alt="submission.title" @click="$emit('zoom')" class="big-thumbnail"/>
+            </div>
+            <div v-if="isAlbum">
+                <img v-bind:src="value.thumbnail_path" v-for="(value, index) in photos" @click="$emit('zoom', index)" v-bind:alt="submission.title" class="big-thumbnail" />
+            </div>
 
-        <div v-if="!isAlbum && submission.thumbnail">
-            <img v-bind:src="submission.thumbnail" v-bind:alt="submission.title" @click="$emit('zoom')" class="big-thumbnail"/>
-        </div>
-        <div v-if="isAlbum">
-            <img v-bind:src="value.thumbnail" v-for="(value, index) in photos" @click="$emit('zoom', index)" v-bind:alt="submission.title" class="big-thumbnail" />
         </div>
 
     	<div class="link-list-info">
 
             <span class="submission-img-title">
-                <!-- <a class="submisison-small-thumbnail" v-if="submission.thumbnail && !full">
-                    <div v-if="showSmallThumbnail" class="small-thumbnail zoom-in" v-bind:style="thumbnail" @click="$emit('zoom')"></div>
-                </a> -->
 
                 <div class="flex1">
 
+                    <!-- submission page -->
+                    <div v-if="full">
 
-                        <!-- submission page -->
-                        <div v-if="full">
+                        <!-- cuerpo del post en full -->
+                        <markdown :text="submission.body" v-if="submission.body && !editing"></markdown>
+                        <!-- cuerpo del post en full editando -->
+                        <textarea class="form-control v-input-big" rows="8" id="text" placeholder="Text(optional)..." v-show="editing" v-model="editedBody"></textarea>
 
-                            <markdown :text="submission.body" v-if="submission.body && !editing"></markdown>
+                        <h3>Se busca</h3>
+                        <ul class="menu-list">
+                            <li v-for="item in submission.wants_for">
+                                <span class="v-channels-text"><strong>{{ item.title }}</strong> {{ item.pivot.description }}</span>
+                            </li>
+                        </ul>
 
-                            <textarea class="form-control v-input-big" rows="8" id="text" placeholder="Text(optional)..." v-show="editing" v-model="editedBody"></textarea>
+                    </div>
+                    <!-- submission indexing pages -->
+                    <div v-else>
 
-                            <h3>Se busca</h3>
+                        <submission-footer :url="url" :comments="comments" :bookmarked="bookmarked" :submission="submission"
+                        @bookmark="$emit('bookmark')" @report="$emit('report')" @hide="$emit('hide')" @nsfw="$emit('nsfw')" @sfw="$emit('sfw')" @destroy="$emit('destroy')" @approve="$emit('approve')" @disapprove="$emit('disapprove')" @removethumbnail="$emit('removethumbnail')" :upvoted="upvoted" :downvoted="downvoted" :points="points"
+                        @upvote="$emit('upvote')" @downvote="$emit('downvote')">
+                        </submission-footer>
 
-                            <ul class="menu-list">
-                                <li v-for="item in submission.wants_for">
-
-                                    <span class="v-channels-text"><strong>{{ item.title }}</strong> {{ item.pivot.description }}</span>
-
-                                </li>
-                            </ul>
-
-
-                        </div>
-                        <!-- submission indexing pages -->
-                        <div v-else>
-                            <router-link :to="'/c/' + submission.category.name + '/' + submission.slug" class="flex-space v-ultra-bold">{{ submission.title }}</router-link>
-                            <submission-footer :url="url" :comments="comments" :bookmarked="bookmarked" :submission="submission"
-                            @bookmark="$emit('bookmark')" @report="$emit('report')" @hide="$emit('hide')" @nsfw="$emit('nsfw')" @sfw="$emit('sfw')" @destroy="$emit('destroy')" @approve="$emit('approve')" @disapprove="$emit('disapprove')" @removethumbnail="$emit('removethumbnail')" :upvoted="upvoted" :downvoted="downvoted" :points="points"
-                            @upvote="$emit('upvote')" @downvote="$emit('downvote')"
-                            ></submission-footer>
-                        </div>
-
+                    </div>
 
                 </div>
             </span>
 
-
-
     	</div>
-
-
-
-
-
-
 
     </div>
 </template>
@@ -241,6 +241,9 @@
                         id: this.submission.id
                     }
                 }).then((response) => {
+
+                    console.log(response.data);
+
                     this.photos = response.data
                 });
             },

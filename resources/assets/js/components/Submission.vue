@@ -1,27 +1,35 @@
 <template>
 	<transition name="fade">
 		<div class="submission-item submission-wrapper" v-show="!hidden" :id="'submission' + list.id">
-			<!-- side-voting -->
+
+            <!-- side-voting -->
 			<div class="side-voting desktop-only">
+
 				<a class="fa-stack align-right" @click="voteUp"
 					data-toggle="tooltip" data-placement="top" title="Upvote">
 					<i class="v-icon v-up-fat side-vote-icon" :class="upvoted ? 'go-primary' : 'go-gray'"></i>
 				</a>
 
-				<div class="user-select vote-number">
-					{{ points }}
-				</div>
+				<div class="user-select vote-number">{{ points }}</div>
 
 				<a class="fa-stack align-right" @click="voteDown"
 					data-toggle="tooltip" data-placement="bottom" title="Downvote">
 					<i class="v-icon v-down-fat side-vote-icon" :class="downvoted ? 'go-red' : 'go-gray'"></i>
 				</a>
+
 			</div>
 
 			<article class="flex1" v-bind:class="'box-typical profile-post ' + list.type">
-				<!-- content -->
+
+                <!-- content -->
 				<div class="profile-post-content">
-					<text-submission v-if="list.type == 'text'" :submission="list" :nsfw="nsfw" :full="full" @bookmark="bookmark"
+
+                    <wanted-submission :submission="list" :nsfw="nsfw" :full="full" @bookmark="bookmark"
+                    :url="'/c/' + list.category.name + '/' + list.slug" :comments="list.comments_number" :bookmarked="bookmarked"
+                    @report="report" @hide="hide" @nsfw="markAsNSFW" @sfw="markAsSFW" @destroy="destroy" @approve="approve" @disapprove="disapprove" @removethumbnail="removeThumbnail" :upvoted="upvoted" :downvoted="downvoted" @upvote="voteUp" @downvote="voteDown" :points="points"
+                    ></wanted-submission>
+<!--
+                    <text-submission v-if="list.type == 'text'" :submission="list" :nsfw="nsfw" :full="full" @bookmark="bookmark"
 					:url="'/c/' + list.category.name + '/' + list.slug" :comments="list.comments_number" :bookmarked="bookmarked"
 					@report="report" @hide="hide" @nsfw="markAsNSFW" @sfw="markAsSFW" @destroy="destroy" @approve="approve" @disapprove="disapprove" @removethumbnail="removeThumbnail" :upvoted="upvoted" :downvoted="downvoted" @upvote="voteUp" @downvote="voteDown" :points="points"
 					></text-submission>
@@ -42,34 +50,33 @@
 						@embed="showEmbed" @bookmark="bookmark"
 						:url="'/c/' + list.category.name + '/' + list.slug" :comments="list.comments_number" :bookmarked="bookmarked"
 						@report="report" @hide="hide" @nsfw="markAsNSFW" @sfw="markAsSFW" @destroy="destroy" @approve="approve" @disapprove="disapprove" @removethumbnail="removeThumbnail" :upvoted="upvoted" :downvoted="downvoted" @upvote="voteUp" @downvote="voteDown" :points="points"
-					></link-submission>
+					></link-submission> -->
 				</div>
 
 				<!-- full page modals -->
 				<photo-viewer v-if="photoViewer" :bookmarked="bookmarked" :points="points" @close="closeViwer"
-				:list="list" :photoindex="photoViewerIndex"
-					:upvoted="upvoted" :downvoted="downvoted" @bookmark="bookmark" @upvote="voteUp" @downvote="voteDown"
-				></photo-viewer>
+				:list="list" :photoindex="photoViewerIndex" :upvoted="upvoted" :downvoted="downvoted" @bookmark="bookmark" @upvote="voteUp" @downvote="voteDown">
+                </photo-viewer>
 
 				<embed-viewer v-if="embedViewer" :bookmarked="bookmarked" :points="points" @close="closeEmbed"
-				:list="list"
-					:upvoted="upvoted" :downvoted="downvoted" @bookmark="bookmark" @upvote="voteUp" @downvote="voteDown"
-				></embed-viewer>
+				:list="list" :upvoted="upvoted" :downvoted="downvoted" @bookmark="bookmark" @upvote="voteUp" @downvote="voteDown">
+                </embed-viewer>
 
 				<gif-player v-if="gifPlayer" :bookmarked="bookmarked" :points="points" @close="closeGifPlayer"
-				:list="list"
-					:upvoted="upvoted" :downvoted="downvoted" @bookmark="bookmark" @upvote="voteUp" @downvote="voteDown"
-				></gif-player>
-			</article>
+				:list="list" :upvoted="upvoted" :downvoted="downvoted" @bookmark="bookmark" @upvote="voteUp" @downvote="voteDown">
+                </gif-player>
+
+        	</article>
 		</div>
 	</transition>
 </template>
 
 <script>
-    import TextSubmission from '../components/submission/TextSubmission.vue';
-    import LinkSubmission from '../components/submission/LinkSubmission.vue';
-    import ImgSubmission from '../components/submission/ImgSubmission.vue';
-    import GifSubmission from '../components/submission/GifSubmission.vue';
+    import WantedSubmission from '../components/submission/WantedSubmission.vue';
+    // import TextSubmission from '../components/submission/TextSubmission.vue';
+    // import LinkSubmission from '../components/submission/LinkSubmission.vue';
+    // import ImgSubmission from '../components/submission/ImgSubmission.vue';
+    // import GifSubmission from '../components/submission/GifSubmission.vue';
 	import PhotoViewer from '../components/PhotoViewer.vue';
 	import EmbedViewer from '../components/Embed.vue';
 	import GifPlayer from '../components/GifPlayer.vue';
@@ -81,10 +88,11 @@
         mixins: [Helpers],
 
         components: {
-            TextSubmission,
-            LinkSubmission,
-            ImgSubmission,
-			GifSubmission,
+            WantedSubmission,
+            // TextSubmission,
+            // LinkSubmission,
+            // ImgSubmission,
+			// GifSubmission,
 			PhotoViewer,
 			EmbedViewer,
 			GifPlayer,

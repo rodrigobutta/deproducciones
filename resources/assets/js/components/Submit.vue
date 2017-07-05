@@ -13,22 +13,23 @@
 
             <form action="/submit" method="post">
                 <div class="form-group relative">
+
                     <input type="text" class="form-control v-input-big" v-bind:class="{ 'btn-input-text': submissionType == 'link'}"
                     id="title" name="title" placeholder="Title ..." autocomplete="off" v-model="fTitle" :disabled="loading">
 
-                    <button type="button" class="v-button v-button--primary btn-input" @click="getTitle(submitURL)"
+                  <!--   <button type="button" class="v-button v-button--primary btn-input" @click="getTitle(submitURL)"
                     v-if="submissionType == 'link' && submitURL && !loadingTitle"
                             data-toggle="tooltip" data-placement="bottom" title="Fetch title from entered URL" :disabled="loading"
                     >Suggest</button>
-
-                    <moon-loader :loading="loadingTitle" :size="'30px'" :color="'#777'" class="btn-input"></moon-loader>
+ -->
+                    <!-- <moon-loader :loading="loadingTitle" :size="'30px'" :color="'#777'" class="btn-input"></moon-loader> -->
 
                     <small class="text-muted go-red" v-for="e in errors.title">{{ e }}</small>
                 </div>
 
                 <input type="hidden" name="type" v-bind:value="submissionType">
 
-                <div v-show="submissionType == 'text'">
+                <!-- <div v-show="submissionType == 'text'"> -->
                     <textarea class="form-control v-input-big" rows="3" id="text" name="text" placeholder="Text(optional)..."
                     v-model="fText" :disabled="loading"></textarea>
 
@@ -44,27 +45,27 @@
 
 
                     <small class="text-muted go-red" v-for="e in errors.text">{{ e }}</small>
-                </div>
+                <!-- </div> -->
 
                 <div v-if="preview && fText" class="form-wrapper">
                     <markdown :text="fText"></markdown>
               	</div>
 
-                <div class="form-group" v-if="submissionType == 'link'">
+               <!--  <div class="form-group" v-if="submissionType == 'link'">
                     <input type="text" class="form-control v-input-big" id="url" name="url" placeholder="URL ..." autocomplete="off" v-model="submitURL" :disabled="loading">
 
                     <small class="text-muted go-red" v-for="e in errors.url">{{ e }}</small>
-                </div>
+                </div> -->
 
-                <div class="form-group" v-if="submissionType == 'gif'">
+               <!--  <div class="form-group" v-if="submissionType == 'gif'">
                     <input type="file" class="form-control v-input-big" id="gif" name="gif"
                     @change="gifSelected" accept="image/gif" :disabled="loading">
 
                     <small class="text-muted go-red" v-for="e in errors.gif">{{ e }}</small>
-                </div>
+                </div> -->
 
-                <div v-show="submissionType == 'img'">
-                    <div class="form-group" v-show="submissionType == 'img'">
+                <!-- <div v-show="submissionType == 'img'"> -->
+                    <div class="form-group" >
                         <form action="/upload-photo" class="dropzone" method="post" id="addPhotosForm">
                             <input type="hidden" name="_token" v-bind:value="csrf">
                             <div class="fallback">
@@ -73,7 +74,7 @@
                         </form>
                         <small class="text-muted go-red" v-for="e in errors.photos">{{ e }}</small>
                     </div>
-                </div>
+                <!-- </div> -->
 
                 <div class="form-group">
                     <multiselect :value="selectedCat" :options="suggestedCats" @input="updateSelected" @search-change="getSuggestedCats" :placeholder="'#channel...'"></multiselect>
@@ -83,36 +84,13 @@
                 <hr class="dashed-hr">
 
                 <div class="flex-space">
-                    <div>
-                        <span class="fa-stack fa-lg fa-pull-left" @click="changeSubmissionType('img')">
-                            <i class="v-icon v-photo" v-bind:class="{ 'go-primary': submissionType == 'img'}"
-                            data-toggle="tooltip" data-placement="top" title="Image"
-                            ></i>
-                        </span>
 
-                        <span class="fa-stack fa-lg fa-pull-left" @click="changeSubmissionType('link')">
-                            <i class="v-icon v-link" v-bind:class="{ 'go-primary': submissionType == 'link'}"
-                            data-toggle="tooltip" data-placement="top" title="Link"
-                            ></i>
-                        </span>
-
-                        <span class="fa-stack fa-lg fa-pull-left" @click="changeSubmissionType('text')">
-                            <i class="v-icon v-text" v-bind:class="{ 'go-primary': submissionType == 'text'}"
-                            data-toggle="tooltip" data-placement="top" title="Text"
-                            ></i>
-                        </span>
-
-                        <span class="fa-stack fa-lg fa-pull-left" @click="changeSubmissionType('gif')">
-                            <i class="v-icon v-gif" v-bind:class="{ 'go-primary': submissionType == 'gif'}"
-                            data-toggle="tooltip" data-placement="top" title="Animated GIF"
-                            ></i>
-                        </span>
-                    </div>
 
                     <button type="submit" class="v-button v-button--green pull-right" @click="submit" :disabled="!goodToGo">
                         Submit
                     </button>
                 </div>
+
             </form>
         </div>
     </section>
@@ -136,11 +114,11 @@
 
         data () {
             return {
-                loadingTitle: false,
+                // loadingTitle: false,
                 fTitle: '',
                 preview: false,
                 fText: '',
-                submitURL: '',
+                // submitURL: '',
                 photo: '',
                 errors: [],
                 customError: '',
@@ -148,7 +126,7 @@
                 loading: false,
                 selectedCat: null,
                 suggestedCats :[],
-                submissionType: 'link',
+                submissionType: 'wanted',
                 photos: [],
                 Store,
                 gifUploadFormData: new FormData(),
@@ -157,13 +135,13 @@
 
         computed: {
         	goodToGo() {
-                if (this.submissionType == "link") {
-                    return (this.fTitle.trim().length > 7 && this.selectedCat && this.submitURL && !this.loading)
-                }
+                // if (this.submissionType == "link") {
+                //     return (this.fTitle.trim().length > 7 && this.selectedCat && this.submitURL && !this.loading)
+                // }
 
-                if (this.submissionType == "img") {
-                    return (this.fTitle.trim().length > 7 && this.selectedCat && this.photos.length && !this.loading)
-                }
+                // if (this.submissionType == "img") {
+                //     return (this.fTitle.trim().length > 7 && this.selectedCat && this.photos.length && !this.loading)
+                // }
 
                 return (this.fTitle.trim().length > 7 && this.selectedCat && !this.loading)
         	}
@@ -251,43 +229,43 @@
 
         		this.loading = true;
 
-                if (this.submissionType == 'gif') {
-                    this.gifUploadFormData.append('title', this.fTitle);
-                    this.gifUploadFormData.append('name', this.selectedCat);
-                    this.gifUploadFormData.append('type', this.submissionType);
+         //        if (this.submissionType == 'gif') {
+         //            this.gifUploadFormData.append('title', this.fTitle);
+         //            this.gifUploadFormData.append('name', this.selectedCat);
+         //            this.gifUploadFormData.append('type', this.submissionType);
 
-                    axios.post('/submit', this.gifUploadFormData).then((response) => {
-                        // success
-                        this.errors = []
+         //            axios.post('/submit', this.gifUploadFormData).then((response) => {
+         //                // success
+         //                this.errors = []
 
-            			Store.submissionUpVotes.push(response.data.id)
+         //    			Store.submissionUpVotes.push(response.data.id)
 
-                        this.$router.push('/c/' + this.selectedCat + '/' + response.data.slug)
+         //                this.$router.push('/c/' + this.selectedCat + '/' + response.data.slug)
 
-    					this.loading = false
-                    }).catch((error) => {
-                        // error
-                        if(error.response.status == 500){
-                            this.customError = error.response.data
-                            this.errors = []
-                            this.loading = false
-                            return
-                        }
+    					// this.loading = false
+         //            }).catch((error) => {
+         //                // error
+         //                if(error.response.status == 500){
+         //                    this.customError = error.response.data
+         //                    this.errors = []
+         //                    this.loading = false
+         //                    return
+         //                }
 
-                        this.errors = error.response.data
-                        this.loading = false
-                    });
+         //                this.errors = error.response.data
+         //                this.loading = false
+         //            });
 
-                    return;
-                }
+         //            return;
+         //        }
 
 
                 // rest of the types
                 axios.post( '/submit', {
                     title: this.fTitle,
-                    url: this.submitURL,
+                    // url: this.submitURL,
                     text: this.fText,
-                    name: this.selectedCat,
+                    category_name: this.selectedCat,
                     type: this.submissionType,
                     photos: this.photos,
                 }).then((response) => {
@@ -313,31 +291,31 @@
                 })
             },
 
-            getTitle(typed){
-                if(!typed) return
+            // getTitle(typed){
+            //     if(!typed) return
 
-                this.loadingTitle = true
+            //     this.loadingTitle = true
 
-                axios.get('/fetch-url-title', {
-                	params: {
-                		url: typed
-                	}
-                }).then((response) => {
-                    this.fTitle = response.data;
-                    this.loadingTitle = false
-                    this.errors.url = []
-                }).catch((error) => {
-                    if (error.response.status == 500) {
-                        this.customError = error.response.data
-                        this.errors = []
-                        this.loadingTitle = false
-                        return
-                    }
+            //     axios.get('/fetch-url-title', {
+            //     	params: {
+            //     		url: typed
+            //     	}
+            //     }).then((response) => {
+            //         this.fTitle = response.data;
+            //         this.loadingTitle = false
+            //         this.errors.url = []
+            //     }).catch((error) => {
+            //         if (error.response.status == 500) {
+            //             this.customError = error.response.data
+            //             this.errors = []
+            //             this.loadingTitle = false
+            //             return
+            //         }
 
-                    this.errors = error.response.data
-                    this.loadingTitle = false
-                });
-            },
+            //         this.errors = error.response.data
+            //         this.loadingTitle = false
+            //     });
+            // },
 
             getSuggestedCats: _.debounce(function (typed) {
                 if(!typed) return
@@ -351,9 +329,9 @@
                 })
             }, 600),
 
-            changeSubmissionType(newType){
-                this.submissionType = newType
-            }
+            // changeSubmissionType(newType){
+            //     this.submissionType = newType
+            // }
         },
     }
 </script>

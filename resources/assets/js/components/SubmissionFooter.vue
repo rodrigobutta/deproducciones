@@ -44,9 +44,9 @@
 							Delete
 						</button>
 
-						<button class="item" @click="$emit('removethumbnail')" v-if="showRemoveTumbnail">
+						<!-- <button class="item" @click="$emit('removethumbnail')" v-if="showRemoveTumbnail">
 							Remove Thumbnail
-						</button>
+						</button> -->
 					</div>
 				</div>
 			</div>
@@ -129,11 +129,11 @@
 				return (this.owns || Store.moderatingAt.indexOf(this.submission.category_id) != -1) && this.submission.nsfw
 			},
 
-			showRemoveTumbnail(){
-				if (this.owns && this.submission.data.thumbnail)
-					return true
-				return false
-			},
+			// showRemoveTumbnail(){
+			// 	if (this.owns && this.submission.data.thumbnail)
+			// 		return true
+			// 	return false
+			// },
 
             date () {
                 return moment(this.submission.created_at).utc(moment().format("Z")).fromNow()

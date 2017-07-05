@@ -18,7 +18,7 @@ class Submission extends Model
     protected $fillable = [
         'data', 'title', 'slug', 'type', 'category_id', 'category_name', 'rate',
         'upvotes', 'downvotes', 'user_id', 'data', 'nsfw', 'approved_at',
-        'deleted_at', 'comments_number',
+        'deleted_at', 'comments_number', 'body', 'thumbnail',
     ];
 
     protected $casts = [
@@ -79,7 +79,7 @@ class Submission extends Model
 
     public function wantsFor()
     {
-        return $this->belongsToMany(Profession::class, 'wanted', 'submission_id', 'profession_id');
+        return $this->belongsToMany(Profession::class, 'wanted', 'submission_id', 'profession_id')->orderBy('order', 'asc')->withPivot('order','status','description');
     }
 
 

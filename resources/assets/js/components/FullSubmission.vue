@@ -77,10 +77,10 @@
 										<button class="item" @click="disapprove" v-if="showDisapprove">
 											Delete
 										</button>
-
+<!--
 										<button class="item" @click="removeThumbnail" v-if="showRemoveTumbnail">
 											Remove Thumbnail
-										</button>
+										</button> -->
 									</div>
 								</div>
 
@@ -241,11 +241,11 @@
 				return (this.owns || Store.moderatingAt.indexOf(this.list.category_id) != -1) && this.list.nsfw
 			},
 
-			showRemoveTumbnail(){
-				if (this.owns && this.list.data.thumbnail)
-					return true
-				return false
-			},
+			// showRemoveTumbnail(){
+			// 	if (this.owns && this.list.thumbnail)
+			// 		return true
+			// 	return false
+			// },
 
             /**
              * Whether or not user wants to see NSFW content's image
@@ -299,7 +299,7 @@
         	 * @return
         	 */
 			removeThumbnail() {
-				this.list.data.thumbnail = null
+				this.list.thumbnail = null
 				this.list.data.img = null
 
 				axios.post('/remove-thumbnail', {

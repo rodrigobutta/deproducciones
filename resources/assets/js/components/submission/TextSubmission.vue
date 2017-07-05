@@ -2,24 +2,45 @@
 
     <div>
 
-        <h1 class="submission-title"><i class="v-icon v-shocked go-red" aria-hidden="true" v-if="submission.nsfw" data-toggle="tooltip" data-placement="bottom" title="NSFW"></i>{{ submission.title }}</h1>
+    <button type="submit" class="v-button v-button--green margin-top-1" @click="patch" v-show="editing">Save</button>
+    <button type="submit" class="v-button v-button--red margin-top-1" @click="cancelEditing" v-show="editing">Cancel</button>
 
-        <div v-if="!isAlbum && showBigThumbnail">
-            <img v-bind:src="submission.data.thumbnail_path" v-bind:alt="submission.title" @click="$emit('zoom')" class="big-thumbnail"/>
+        <div v-if="full">
+
+            <h1 class="submission-title" v-if="submission.title && !editing">
+                <i class="v-icon v-shocked go-red" aria-hidden="true" v-if="submission.nsfw" data-toggle="tooltip" data-placement="bottom" title="NSFW"></i>{{ submission.title }}
+            </h1>
+            <textarea class="form-control v-input-big" rows="2" id="title" placeholder="Title.." v-show="editing" v-model="editedTitle"></textarea>
+
+
+            <div class="form-group" v-show="editing" >
+                <form action="/upload-photo" class="dropzone" method="post" id="addPhotosForm">
+                    <input type="hidden" name="_token" v-bind:value="csrf">
+                    <div class="fallback">
+                        <input name="photo" type="file" multiple />
+                    </div>
+                </form>
+                <small class="text-muted go-red" v-for="e in errors.photos">{{ e }}</small>
+            </div>
+
+        </div>
+
+
+
+        <div v-if="!isAlbum && submission.thumbnail">
+            <img v-bind:src="submission.thumbnail" v-bind:alt="submission.title" @click="$emit('zoom')" class="big-thumbnail"/>
         </div>
 
         <div v-if="isAlbum && showBigThumbnail">
-            <img v-bind:src="value.thumbnail_path" v-for="(value, index) in photos"
-            @click="$emit('zoom', index)" v-bind:alt="submission.title" class="margin-bottom-1" />
+            <img v-bind:src="value.thumbnail" v-for="(value, index) in photos" @click="$emit('zoom', index)" v-bind:alt="submission.title" class="margin-bottom-1" />
         </div>
 
     	<div class="link-list-info">
 
             <span class="submission-img-title">
-                <a class="submisison-small-thumbnail" v-if="submission.data.thumbnail_path && !full">
-                    <!-- img -->
+                <!-- <a class="submisison-small-thumbnail" v-if="submission.thumbnail && !full">
                     <div v-if="showSmallThumbnail" class="small-thumbnail zoom-in" v-bind:style="thumbnail" @click="$emit('zoom')"></div>
-                </a>
+                </a> -->
 
                 <div class="flex1">
 
@@ -27,12 +48,21 @@
                         <!-- submission page -->
                         <div v-if="full">
 
-                               <markdown :text="body" v-if="body && !editing"></markdown>
-                            <textarea class="form-control v-input-big" rows="3" id="text" placeholder="Text(optional)..." v-show="editing" v-model="editedBody"></textarea>
-                               <button type="submit" class="v-button v-button--green margin-top-1" @click="patch" v-show="editing">Edit</button>
-                               <button type="submit" class="v-button v-button--red margin-top-1" @click="cancelEditing" v-show="editing">
-                                   Cancel
-                               </button>
+                            <markdown :text="submission.body" v-if="submission.body && !editing"></markdown>
+
+                            <textarea class="form-control v-input-big" rows="8" id="text" placeholder="Text(optional)..." v-show="editing" v-model="editedBody"></textarea>
+
+                            <h3>Se busca</h3>
+
+                            <ul class="menu-list">
+                                <li v-for="item in submission.wants_for">
+
+                                    <span class="v-channels-text"><strong>{{ item.title }}</strong> {{ item.pivot.description }}</span>
+
+                                </li>
+                            </ul>
+
+
                         </div>
                         <!-- submission indexing pages -->
                         <div v-else>
@@ -52,16 +82,8 @@
     	</div>
 
 
-        <h3>aasdsadasda</h3>
 
 
-        <ul class="menu-list">
-            <li v-for="item in submission.wants_for">
-
-                    <span class="v-channels-text">{{ item.title }}</span>
-
-            </li>
-        </ul>
 
 
 
@@ -71,15 +93,29 @@
 <script>
     import Markdown from '../../components/Markdown.vue';
 	import SubmissionFooter from '../../components/SubmissionFooter.vue';
+    import MoonLoader from '../../components/MoonLoader.vue'
+
+    window.Dropzone = require('../../libs/dropzone')
+    Dropzone.autoDiscover = false
 
     export default {
         data() {
+
+            // console.log(this.submission.data);
+
             return {
                 editing: false,
-                body: this.submission.data.text,
-                editedBody: this.submission.data.text,
+               // body: this.submission.data.text,
+                editedBody: this.submission.body,
+                editedTitle: this.submission.title,
+                csrf: window.Laravel.csrfToken,
+                loading: false,
+                photo: '',
+                errors: [],
+                customError: '',
                 auth,
                 photos: [],
+                Store,
             }
         },
 
@@ -101,7 +137,7 @@
         computed: {
             thumbnail() {
                 return {
-                    backgroundImage: 'url(' + this.submission.data.thumbnail_path + ')'
+                    backgroundImage: 'url(' + this.submission.thumbnail + ')'
                 };
             },
 
@@ -137,12 +173,15 @@
 
             console.log(this.submission);
 
+            this.dropzone()
+
         },
 
 		mounted () {
 			this.$nextTick(function () {
 	        	this.$root.loadSemanticTooltip();
 	        	this.$root.autoResize();
+                this.loadDropzone();
 			})
 		},
 
@@ -162,16 +201,28 @@
 			 * @return void
 			 */
 			patch() {
+
 				axios.post('/patch-text-submission', {
 					id: this.submission.id,
-					text: this.editedBody
+					text: this.editedBody,
+                    title: this.editedTitle,
+                    photos: this.photos
 				})
 				.then((response) => {
-					this.body = this.editedBody;
+
+                    console.log(response.data);
+
+
+					this.submission.body = this.editedBody;
+                    this.submission.title = this.editedTitle;
+
+                    this.photos = response.data;
+
 					this.editing = false;
 				}).catch((error) => {
 					this.editing = true;
 				});
+
 			},
 
 			/**
@@ -180,7 +231,8 @@
 			 * @return void
 			 */
 			cancelEditing() {
-				this.editedBody = this.body;
+				this.editedBody = this.submission.body;
+                this.editedTitle = this.submission.title;
 			    this.editing = false;
 			},
 
@@ -192,6 +244,24 @@
                 }).then((response) => {
                     this.photos = response.data
                 });
+            },
+
+
+            dropzone() {
+                var that = this
+                Dropzone.options.addPhotosForm  = {
+                    paramName: 'photo',
+                    maxFileSize: 10,
+                    // addRemoveLinks: true,
+                    acceptedFiles: '.jpg, .jpeg, .png, .gif',
+                    success: function(file, data) {
+                        that.photos.push(data)
+                    }
+                }
+            },
+
+            loadDropzone() {
+                $(".dropzone").dropzone()
             },
 
 		}

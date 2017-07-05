@@ -76,10 +76,7 @@
                 </div>
 
                 <div class="form-group">
-                    <multiselect :value="selectedCat" :options="suggestedCats" @input="updateSelected"
-                    @search-change="getSuggestedCats" :placeholder="'#channel...'"
-                    ></multiselect>
-
+                    <multiselect :value="selectedCat" :options="suggestedCats" @input="updateSelected" @search-change="getSuggestedCats" :placeholder="'#channel...'"></multiselect>
                     <small class="text-muted go-red" v-for="e in errors.name">{{ e }}</small>
                 </div>
 

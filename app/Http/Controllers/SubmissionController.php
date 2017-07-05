@@ -120,41 +120,44 @@ class SubmissionController extends Controller
             }
         }
 
-        if ($request->type == 'img') {
-            $this->validate($request, [
-                'title'  => 'required|between:7,150',
-                'photos' => 'required',
-                'name'   => 'required|exists:categories',
-            ]);
+        // if ($request->type == 'img') {
+        //     $this->validate($request, [
+        //         'title'  => 'required|between:7,150',
+        //         'photos' => 'required',
+        //         'name'   => 'required|exists:categories',
+        //     ]);
 
-            $data = $this->imgSubmission($request);
-        }
+        //     $data = $this->imgSubmission($request);
+        // // }
 
-        if ($request->type == 'gif') {
+        // $photo = Photo::where('id', $request->input('photos')[0])->firstOrFail();
+
+
+        // if ($request->type == 'gif') {
+        //     $this->validate($request, [
+        //         'title' => 'required|between:7,150',
+        //         'gif'   => 'required|mimes:gif|max:40960',
+        //         'name'  => 'required|exists:categories',
+        //     ]);
+
+        //     try {
+        //         $data = $this->gifSubmission($request);
+        //     } catch (\Exception $exception) {
+        //         app('sentry')->captureException($exception);
+
+        //         return response("We couldn't process this GIF, please try another one. ", 500);
+        //     }
+        // }
+
+        // if ($request->type == 'text') {
             $this->validate($request, [
                 'title' => 'required|between:7,150',
-                'gif'   => 'required|mimes:gif|max:40960',
+                // 'type'  => 'required|in:link,img,text',
                 'name'  => 'required|exists:categories',
             ]);
 
-            try {
-                $data = $this->gifSubmission($request);
-            } catch (\Exception $exception) {
-                app('sentry')->captureException($exception);
-
-                return response("We couldn't process this GIF, please try another one. ", 500);
-            }
-        }
-
-        if ($request->type == 'text') {
-            $this->validate($request, [
-                'title' => 'required|between:7,150',
-                'type'  => 'required|in:link,img,text',
-                'name'  => 'required|exists:categories',
-            ]);
-
-            $data = $this->textSubmission($request);
-        }
+            // $data = $this->textSubmission($request);
+        // }
 
         $category = Category::where('name', $request->name)->select('id', 'nsfw')->firstOrFail();
 
@@ -168,7 +171,10 @@ class SubmissionController extends Controller
                 'nsfw'          => $category->nsfw,
                 'rate'          => firstRate(),
                 'user_id'       => $user->id,
-                'data'          => $data,
+                // 'data'          => $data,
+                'body'          => $request->text,
+                // 'thumbnail'     => '11111',
+
             ]);
 
             event(new SubmissionWasCreated($submission));
@@ -179,9 +185,9 @@ class SubmissionController extends Controller
         }
 
         // Update the submission_id field in photos (We just found access to the submission_id)
-        if ($request->type == 'img') {
+        // if ($request->type == 'img') {
             DB::table('photos')->whereIn('id', $request->input('photos'))->update(['submission_id' => $submission->id]);
-        }
+        // }
 
         try {
             $this->firstVote($user, $submission->id);
@@ -369,12 +375,29 @@ class SubmissionController extends Controller
         abort_unless($submission->type == 'text', 403);
 
         $submission->update([
+            'title' => $request->title,
             'data' => array_only($request->all(), ['text']),
         ]);
+
+
+        // var_dump( $request->input('photos') );
+
+        foreach ($request->input('photos') as $photo) {
+
+            if(is_string($photo)){                 // si es string asumo que es una foto subida recien, caso contrario mostraria el array que llego al front con toda la data de la foto
+
+                DB::table('photos')->whereId($photo)->update(['submission_id' => $submission->id]);
+            }
+
+        }
+
+
 
         // so next time it'll fetch the updated copy
         $this->removeSubmissionFromCache($submission);
 
-        return response('Text Submission has been updated. ', 200);
+        // return response('Text Submission has been updated. ', 200);
+
+        return Photo::where('submission_id', $submission->id)->get();
     }
 }

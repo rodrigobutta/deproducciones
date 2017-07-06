@@ -40,12 +40,18 @@
             <router-link :to="'/c/' + submission.category.name + '/' + submission.slug" class="flex-space v-ultra-bold">{{ submission.title }}</router-link>
 
             <!-- foto unica o galeria de fotos en vista list -->
-            <div v-if="!isAlbum && submission.thumbnail">
+        <!--     <div v-if="!isAlbum && submission.thumbnail">
                 <img v-bind:src="submission.thumbnail" v-bind:alt="submission.title" @click="$emit('zoom')" class="big-thumbnail"/>
             </div>
             <div v-if="isAlbum">
                 <img v-bind:src="value.thumbnail_path" v-for="(value, index) in photos" @click="$emit('zoom', index)" v-bind:alt="submission.title" class="big-thumbnail" />
-            </div>
+            </div> -->
+
+          <!--   <div>
+                <img v-bind:src="value.thumbnail_path" v-for="(value, index) in submission.photos" @click="$emit('zoom', index)" v-bind:alt="submission.title" class="big-thumbnail" />
+            </div> -->
+
+            <photo-gallery :list="submission.photos"></photo-gallery>
 
         </div>
 
@@ -87,12 +93,15 @@
     	</div>
 
     </div>
+
+
 </template>
 
 <script>
     import Markdown from '../../components/Markdown.vue';
 	import SubmissionFooter from '../../components/SubmissionFooter.vue';
-    import MoonLoader from '../../components/MoonLoader.vue'
+    import MoonLoader from '../../components/MoonLoader.vue';
+    import PhotoGallery from '../../components/PhotoGallery.vue';
 
     window.Dropzone = require('../../libs/dropzone')
     Dropzone.autoDiscover = false
@@ -159,18 +168,21 @@
 
         components: {
             Markdown,
-            SubmissionFooter
+            SubmissionFooter,
+            PhotoGallery
         },
 
         created() {
 
             this.$eventHub.$on('edit-submission', this.editSubmission);
 
+
+
             if(this.full){
                 this.getPhotos()
             }
 
-            console.log(this.submission);
+            // console.log(this.submission);
 
             this.dropzone()
 

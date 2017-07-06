@@ -25,7 +25,7 @@ class Submission extends Model
         'data' => 'json',
     ];
 
-    protected $with = ['owner','category', 'wantsFor'];
+    protected $with = ['owner','category', 'wantsFor', 'photos'];
 
     protected static $recordEvents = ['created'];
 
@@ -81,6 +81,12 @@ class Submission extends Model
     {
         return $this->belongsToMany(Profession::class, 'wanted', 'submission_id', 'profession_id')->orderBy('order', 'asc')->withPivot('order','status','description');
     }
+
+    public function photos()
+    {
+        return $this->hasMany(Photo::class, 'submission_id');
+    }
+
 
 
 

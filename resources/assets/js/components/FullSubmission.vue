@@ -22,12 +22,6 @@
 						</div>
 
 						<div class="flex-center">
-							<div>
-								<a class="reply" v-if="owns && (list.type == 'text')" @click="edit"
-			                    data-toggle="tooltip" data-placement="top" title="Edit">
-			                        <i class="v-icon v-edit go-gray h-purple pointer"></i>
-			                    </a>
-							</div>
 
 							<div class="voting-wrapper display-none">
 								<a class="fa-stack align-right" @click="voteUp"
@@ -35,9 +29,7 @@
 									<i class="v-icon v-up-fat" :class="upvoted ? 'go-primary' : 'go-gray'"></i>
 								</a>
 
-								<div class="detail">
-									{{ points }} Points
-								</div>
+								<div class="detail">{{ points }} Points</div>
 
 								<a class="fa-stack align-right" @click="voteDown"
 									data-toggle="tooltip" data-placement="top" title="Downvote">
@@ -46,48 +38,30 @@
 							</div>
 
 							<div>
+
 								<div class="ui icon top right green pointing dropdown" v-if="!isGuest">
 									<i class="v-icon v-more" aria-hidden="true"></i>
 
 									<div class="menu">
-										<button class="item" @click="report" v-if="!owns">
-											Report
-										</button>
+										<button class="item" @click="report" v-if="!owns">Report</button>
+										<button class="item" @click="hide" v-if="!owns">Hide</button>
 
-										<button class="item" @click="hide" v-if="!owns">
-											Hide
-										</button>
+                                        <button class="item" @click="markAsNSFW" v-if="showNSFW">Mark as Family Unsafe</button>
+										<button class="item" @click="markAsSFW" v-if="showSFW">Mark as Family Safe</button>
+                                        <button class="item" @click="edit" v-if="owns">Edit</button>
+										<button class="item" @click="destroy" v-if="owns">Delete</button>
 
-										<button class="item" @click="markAsNSFW" v-if="showNSFW">
-											NSFW
-										</button>
+										<button class="item" @click="approve" v-if="showApprove">Approve</button>
+										<button class="item" @click="disapprove" v-if="showDisapprove">Disapprove</button>
 
-										<button class="item" @click="markAsSFW" v-if="showSFW">
-											Family Safe
-										</button>
-
-										<button class="item" @click="destroy" v-if="owns">
-											Delete
-										</button>
-
-										<button class="item" @click="approve" v-if="showApprove">
-											Approve
-										</button>
-
-										<button class="item" @click="disapprove" v-if="showDisapprove">
-											Delete
-										</button>
-<!--
-										<button class="item" @click="removeThumbnail" v-if="showRemoveTumbnail">
-											Remove Thumbnail
-										</button> -->
+                                        <!--<button class="item" @click="removeThumbnail" v-if="showRemoveTumbnail">Remove Thumbnail</button> -->
 									</div>
 								</div>
 
-								<a class="fa-stack" @click="bookmark"
-									data-toggle="tooltip" data-placement="top" title="Bookmark">
+								<a class="fa-stack" @click="bookmark" data-toggle="tooltip" data-placement="top" title="Bookmark">
 									<i class="v-icon h-yellow" :class="bookmarked ? 'go-yellow v-unbookmark' : 'v-bookmark'"></i>
 								</a>
+
 							</div>
 						</div>
 					</div>
@@ -118,20 +92,18 @@
 
 				</div> -->
 
-				<photo-viewer v-if="photoViewer" :bookmarked="bookmarked" :points="points" @close="closeViwer"
-				:list="list" :photoindex="photoViewerIndex"
+				<photo-viewer v-if="photoViewer" :bookmarked="bookmarked" :points="points" @close="closeViwer" :list="list" :photoindex="photoViewerIndex"
 					:upvoted="upvoted" :downvoted="downvoted" @bookmark="bookmark" @upvote="voteUp" @downvote="voteDown"
 				></photo-viewer>
 
-				<embed-viewer v-if="embedViewer" :bookmarked="bookmarked" :points="points" @close="closeEmbed"
-				:list="list"
+				<embed-viewer v-if="embedViewer" :bookmarked="bookmarked" :points="points" @close="closeEmbed" :list="list"
 					:upvoted="upvoted" :downvoted="downvoted" @bookmark="bookmark" @upvote="voteUp" @downvote="voteDown"
 				></embed-viewer>
 
-				<gif-player v-if="gifPlayer" :bookmarked="bookmarked" :points="points" @close="closeGifPlayer"
-				:list="list"
+				<gif-player v-if="gifPlayer" :bookmarked="bookmarked" :points="points" @close="closeGifPlayer" :list="list"
 					:upvoted="upvoted" :downvoted="downvoted" @bookmark="bookmark" @upvote="voteUp" @downvote="voteDown"
 				></gif-player>
+
 			</article>
 		</div>
 	</transition>
@@ -212,6 +184,7 @@
 
 
         computed: {
+
 			points(){
 				let total = this.list.upvotes - this.list.downvotes
 

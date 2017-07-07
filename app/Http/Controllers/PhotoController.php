@@ -56,7 +56,7 @@ class PhotoController extends Controller
             $photo->thumbnail_height = $h;
 
 
-            $photo->blurry_path = $this->createThumbnail($photo->path, 300, null, 'submissions/img/blurry',1,true,50);
+            $photo->blurry_path = $this->createThumbnail($photo->path, 300, null, 'submissions/img/blurry',20,true,50);
 
             // list($w, $h) = getimagesize($photo->blurry_path);
             // $photo->blurry_path_width = $w;

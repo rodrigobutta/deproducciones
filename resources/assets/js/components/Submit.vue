@@ -124,40 +124,49 @@
                 customError: '',
                 csrf: window.Laravel.csrfToken,
                 loading: false,
+                uploading: false,
                 selectedCat: null,
                 suggestedCats :[],
                 submissionType: 'wanted',
                 photos: [],
                 Store,
-                gifUploadFormData: new FormData(),
+                // gifUploadFormData: new FormData()
             }
         },
 
         computed: {
+
         	goodToGo() {
-                // if (this.submissionType == "link") {
-                //     return (this.fTitle.trim().length > 7 && this.selectedCat && this.submitURL && !this.loading)
-                // }
+                return (this.fTitle.trim().length > 7 && this.selectedCat && !this.loading && !this.uploading )
+            },
 
-                // if (this.submissionType == "img") {
-                //     return (this.fTitle.trim().length > 7 && this.selectedCat && this.photos.length && !this.loading)
-                // }
-
-                return (this.fTitle.trim().length > 7 && this.selectedCat && !this.loading)
-        	}
         },
 
         created () {
-            this.dropzone()
             this.setDefaultCategories()
             this.submitApi()
         },
 
 		mounted: function () {
+
 			this.$nextTick(function () {
+
 				this.$root.loadSemanticTooltip()
 				this.loadDropzone()
 				this.$root.autoResize()
+
+                var that = this
+
+                this.dropzone.on('addedfile', function (file) {
+                    that.uploading = true
+                })
+
+                this.dropzone.on('complete', function (file) {
+                    if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                        that.uploading = false;
+                    }
+                })
+
 			})
 		},
 
@@ -201,70 +210,26 @@
                 this.selectedCat = newSelected
             },
 
-        	dropzone() {
-
-                var template = '<div class="dz-preview dz-file-preview"><div class="dz-details"><div class="dz-filename"><span data-dz-name></span></div><div class="dz-size" data-dz-size></div><img data-dz-thumbnail /></div><div class="dz-success-mark"><span>✔</span></div><div class="dz-error-mark"><span>✘</span></div><div class="dz-error-message"><span data-dz-errormessage></span></div></div>'
-
-
-
-            	var that = this
-	            Dropzone.options.addPhotosForm  = {
-	                paramName: 'photo',
-	                maxFileSize: 10,
-                    // addRemoveLinks: true,
-	                acceptedFiles: '.jpg, .jpeg, .png3',
-	                success: function(file, data) {
-	                    that.photos.push(data)
-	                },
-                    previewTemplate: template
-	            }
-        	},
-
         	loadDropzone() {
-                $(".dropzone").dropzone()
-            },
 
-            gifSelected(e) {
-                this.gifUploadFormData = new FormData();
+                var that = this
+                this.dropzone = new Dropzone(".dropzone", {
+                    paramName: 'photo',
+                    maxFileSize: 10,
+                    acceptedFiles: '.jpg, .jpeg, .png',
+                    success: function(file, data) {
+                        console.log('success');
+                        that.photos.push(data)
+                    }
+                })
 
-                this.gifUploadFormData.append('gif', e.target.files[0]);
+
             },
 
         	submit(e) {
                 e.preventDefault()
 
         		this.loading = true;
-
-         //        if (this.submissionType == 'gif') {
-         //            this.gifUploadFormData.append('title', this.fTitle);
-         //            this.gifUploadFormData.append('name', this.selectedCat);
-         //            this.gifUploadFormData.append('type', this.submissionType);
-
-         //            axios.post('/submit', this.gifUploadFormData).then((response) => {
-         //                // success
-         //                this.errors = []
-
-         //    			Store.submissionUpVotes.push(response.data.id)
-
-         //                this.$router.push('/c/' + this.selectedCat + '/' + response.data.slug)
-
-    					// this.loading = false
-         //            }).catch((error) => {
-         //                // error
-         //                if(error.response.status == 500){
-         //                    this.customError = error.response.data
-         //                    this.errors = []
-         //                    this.loading = false
-         //                    return
-         //                }
-
-         //                this.errors = error.response.data
-         //                this.loading = false
-         //            });
-
-         //            return;
-         //        }
-
 
                 // rest of the types
                 axios.post( '/submit', {
@@ -335,48 +300,7 @@
                 })
             }, 600),
 
-            // changeSubmissionType(newType){
-            //     this.submissionType = newType
-            // }
         },
     }
 </script>
 
-
-<style media="screen">
-    #new-submission {
-        position: relative;
-    }
-
-    .opacity-fade {
-        opacity: 0.6;
-    }
-
-    .form-loader {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        z-index: 100;
-    }
-
-    .form-loader .v-moon1 {
-        height: 60px !important;
-        width: 60px !important;
-    }
-
-    .form-loader .v-moon2 {
-        height: 5.28571px !important;
-        width: 5.28571px !important;
-        border-radius: 100% !important;
-        top: 25.8571px !important;
-        opacity: 1 !important;
-        background-color: #333 !important;
-    }
-
-    .form-loader .v-moon3 {
-        height: 60px !important;
-        width: 60px !important;
-        opacity: 0.2 !important;
-        border: 5.71429px solid #000 !important;
-    }
-</style>

@@ -22,22 +22,32 @@ trait PhotoTools
      *
      * @return (string) the path of uploaded file
      */
-    protected function createThumbnail($url, $width, $height, $folder = 'submissions/img/thumbs')
+    protected function createThumbnail($url, $width, $height, $folder = 'submissions/img/thumbs', $quality = 90, $bnw = false, $blur = -1)
     {
         $filename = time().str_random(7).'.jpg';
         $image = Image::make($url);
 
-        if ($image->width() > 1200) {
+        // if ($image->width() > 1200) {
             if ($width == null || $height == null) {
                 $image = $image->resize($width, $height, function ($constraint) {
                     $constraint->aspectRatio();
+                    $constraint->upsize();
                 });
             } else {
                 $image = $image->resize($width, $height);
             }
+        // }
+
+        if($bnw){
+            $image->greyscale();
         }
 
-        $image->encode();
+        if($blur>-1){
+            $image->blur($blur);
+        }
+
+
+        $image->encode('jpg',$quality);
         Storage::put($folder.'/'.$filename, $image);
 
         return $this->ftpAddress().$folder.'/'.$filename;

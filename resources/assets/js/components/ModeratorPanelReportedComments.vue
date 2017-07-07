@@ -80,7 +80,7 @@ export default {
 
     created: function() {
         this.getItems()
-        this.$eventHub.$on('scrolled-to-bottom', this.loadMore)
+        this.vm.$on('scrolled-to-bottom', this.loadMore)
     },
 
     watch: {

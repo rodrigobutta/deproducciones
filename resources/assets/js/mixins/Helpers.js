@@ -54,7 +54,7 @@ export default {
     	{
     		if (!this.isGuest) return;
 
-    		this.$eventHub.$emit('login-modal');
+    		this.vm.$emit('login-modal');
     	},
 
         /**

@@ -34,7 +34,7 @@
                     v-model="fText" :disabled="loading"></textarea>
 
                     <div class="flex-space">
-                        <a class="comment-form-guide text-muted" @click="$eventHub.$emit('markdown-guide')">
+                        <a class="comment-form-guide text-muted" @click="vm.$emit('markdown-guide')">
         	            	Formatting Guide
         	            </a>
 
@@ -202,15 +202,21 @@
             },
 
         	dropzone() {
+
+                var template = '<div class="dz-preview dz-file-preview"><div class="dz-details"><div class="dz-filename"><span data-dz-name></span></div><div class="dz-size" data-dz-size></div><img data-dz-thumbnail /></div><div class="dz-success-mark"><span>✔</span></div><div class="dz-error-mark"><span>✘</span></div><div class="dz-error-message"><span data-dz-errormessage></span></div></div>'
+
+
+
             	var that = this
 	            Dropzone.options.addPhotosForm  = {
 	                paramName: 'photo',
 	                maxFileSize: 10,
                     // addRemoveLinks: true,
-	                acceptedFiles: '.jpg, .jpeg, .png, .gif',
+	                acceptedFiles: '.jpg, .jpeg, .png3',
 	                success: function(file, data) {
 	                    that.photos.push(data)
-	                }
+	                },
+                    previewTemplate: template
 	            }
         	},
 

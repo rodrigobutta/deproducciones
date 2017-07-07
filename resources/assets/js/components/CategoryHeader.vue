@@ -163,11 +163,11 @@ export default {
     	},
 
 		emitRules(){
-			this.$eventHub.$emit('rules')
+			this.vm.$emit('rules')
 		},
 
 		emitModerators() {
-			this.$eventHub.$emit('moderators')
+			this.vm.$emit('moderators')
 		},
 
 
@@ -182,10 +182,10 @@ export default {
             this.fileUploadFormData.append('photo', e.target.files[0]);
 
     		axios.post('/upload-temp-avatar', this.fileUploadFormData).then((response) => {
-				this.$eventHub.$emit('crop-photo-uploaded', response.data)
+				this.vm.$emit('crop-photo-uploaded', response.data)
             });
 
-    		this.$eventHub.$emit('crop-category-photo')
+    		this.vm.$emit('crop-category-photo')
 		},
 
     	/**

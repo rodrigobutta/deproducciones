@@ -41,8 +41,8 @@ export default {
 
    	created () {
 		this.clear()
-		this.$eventHub.$on('scrolled-to-bottom', this.loadMore)
-		this.$eventHub.$on('refresh-profession-submissions', this.clear)
+		this.vm.$on('scrolled-to-bottom', this.loadMore)
+		this.vm.$on('refresh-profession-submissions', this.clear)
    	},
 
     watch: {

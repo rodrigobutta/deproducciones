@@ -109,6 +109,88 @@
 	<script src="{{ mix('/js/manifest.js') }}"></script>
 	<script src="{{ mix('/js/vendor.js') }}"></script>
 	<script src="{{ mix('/js/app.js') }}"></script>
+
+
+
+    <script type="text/javascript">
+
+    // var lazyImages ;
+
+
+
+        // window.addEventListener('load', function() {
+        //     console.log('load');
+
+        //     if (window.hasOwnProperty("touchmove")) {
+        //         console.log('touchmove')
+        //         addEventListener('touchmove', processScroll); // Touch
+        //     } else {
+        //         console.log('scroll')
+        //         addEventListener('scroll', processScroll);  // Mouse
+        //     }
+
+        //   }, false);
+
+
+        // window.onload = function() {
+        //     console.log("onload");
+
+        //     processLazy();
+
+
+        //     processScroll();
+
+
+        // }
+
+        // window.onscroll = function() {
+        //     console.log('scrolling');
+        //     processScroll();
+        // };
+
+
+       // var processLazy = function () {
+       //       console.log('processLazy');
+
+       //      lazyImages = Array.prototype.slice.call(document.getElementsByClassName("lazy"));
+
+       //      console.log(lazyImages);
+
+       // }
+
+
+
+
+
+       // function elementInViewport(el) {
+       //     var rect = el.getBoundingClientRect()
+       //     return (rect.top >= 0 && rect.left >= 0 && (rect.top - 500)<= (window.innerHeight || document.documentElement.clientHeight))
+       // }
+
+       // var processScroll = function () {
+       //      console.log('processScroll');
+
+       //     for (var i = 0; i < lazyImages.length; i++) {
+       //          if(hasClass(lazyImages[i],'lazy')){
+       //             if (elementInViewport(lazyImages[i])) {
+       //                 lazyImages[i].setAttribute("src", lazyImages[i].getAttribute("data-src"));
+       //                 lazyImages[i].classList.remove("lazy");
+       //                 // lazyImages.splice(i, i);
+       //             }
+       //         }
+       //     };
+       // };
+
+
+
+       // function hasClass(element, cls) {
+       //     return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+       // }
+
+
+
+    </script>
+
 @yield('footer')
 
 </body>

@@ -5,69 +5,35 @@
             <moon-loader :loading="loading && isAlbum" :size="'50px'" :color="'#777'" class="form-loader"></moon-loader>
         </div>
 
-        <div class="photo-wrapper" v-if="!isAlbum">
-            <img :src="list.thumbnail_path">
+        <div class="photo-gallery" :columns="columns" v-if="!loading">
+            <img v-bind:class="{ lazy: !value.isLazyLoaded }" v-bind:src="value.blurry_path" v-for="(value, index) in list" @click="showPhotoViewer(index)" :width="value.thumbnail_width" :height="value.thumbnail_height"/>
         </div>
 
-        <!-- <div class="photo-album-wrapper" v-if="isAlbum && !loading"> -->
-        <div class="photo-album-wrapper" v-if="!loading">
-            <img v-bind:src="value.thumbnail_path" v-for="(value, index) in list" @click="$emit('zoom', index)" class="big-thumbnail" />
-        </div>
-
+        <photo-viewer v-if="photoViewer" @close="closeViwer" :list="list" :photoindex="photoViewerIndex"></photo-viewer>
 
     </div>
 </template>
 
-<style media="screen">
-    .photo-gallery-wrapper #loading-wrapper {
-        position: relative;
-        height: 100%;
-    }
-
-    .opacity-fade {
-        opacity: 0.6;
-    }
-
-    .photo-gallery-wrapper .form-loader {
-        position: absolute;
-        top: 42%;
-        left: 50%;
-        z-index: 100;
-    }
-
-    .form-loader .v-moon1 {
-        height: 60px !important;
-        width: 60px !important;
-    }
-
-    .form-loader .v-moon2 {
-        height: 5.28571px !important;
-        width: 5.28571px !important;
-        border-radius: 100% !important;
-        top: 25.8571px !important;
-        opacity: 1 !important;
-        background-color: #333 !important;
-    }
-
-    .form-loader .v-moon3 {
-        height: 60px !important;
-        width: 60px !important;
-        opacity: 0.2 !important;
-        border: 5.71429px solid #000 !important;
-    }
-</style>
-
-
 <script>
 
-    import MoonLoader from '../components/MoonLoader.vue'
+    import MoonLoader from '../components/MoonLoader.vue';
+    import PhotoViewer from '../components/PhotoViewer.vue';
 
     import Helpers from '../mixins/Helpers'
 
-    export default {
-        components: {MoonLoader},
+    import inViewport from 'vue-in-viewport-mixin';
 
-        mixins: [Helpers],
+
+    export default {
+        components: {
+            MoonLoader,
+            PhotoViewer
+        },
+
+        mixins: [
+            Helpers,
+            inViewport
+        ],
 
         props: [
             'list'
@@ -76,11 +42,16 @@
         data: function () {
             return {
                 loading: false,
-                photos: []
+                photos: [],
+                photoViewerIndex: null,
+                photoViewer: false,
+                columns: 1,
+                lazyLoaded: false
             }
         },
 
         computed: {
+
             isAlbum(){
                 return this.list.length > 1
             },
@@ -92,17 +63,87 @@
             //     this.getPhotos()
             // }
 
-            console.log(this.list);
+            for (var i = 0; i < this.list.length; i++) {
+                this.list[i].isLazyLoaded = false
+            };
+
+
+
+            this.columns = 1;
+            if(this.list.length>2){
+                this.columns = 2;
+            }
+            if(this.list.length>5){
+                this.columns = 3;
+            }
+
+            this.vm.$on('photo-viewer', this.showPhotoViewer)
+            this.vm.$on('scape', this.closeViwer)
+
+            this.vm.$on('in-viewport', this.inViewport)
+
+            // console.log(this.list);
         },
 
         mounted: function() {
+
             this.$nextTick(function() {
                 this.$root.loadSemanticTooltip()
             })
+
+
         },
+
+        watch: {
+
+            'inViewport.now': function(visible) {
+                if(visible){
+                    // this.vm.$emit('in-viewport')
+
+                    if(!this.lazyLoaded){
+                        this.lazyLoad();
+                    }
+
+                }
+            }
+        },
+
 
         methods: {
 
+            lazyLoad(){
+                console.log('lazyLoad');
+                this.lazyLoaded = true;
+
+                var ii = 0;
+                for (var i = 0; i < this.list.length; i++) {
+
+                    var img, that;
+                    img = new Image();
+                    that = this;
+
+                    img.onload = function(nr){
+                         that.list[ii].blurry_path = that.list[ii].thumbnail_path;
+                         that.list[ii].isLazyLoaded = true;
+                         ii++;
+                    }
+                    img.src = this.list[i].thumbnail_path;
+
+                };
+
+            },
+
+            showPhotoViewer(index = null){
+
+                if (index !== null) {
+                    this.photoViewerIndex = index
+                }
+                this.photoViewer = true
+            },
+
+            closeViwer(){
+                this.photoViewer = false
+            },
 
          //    getPhotos: function () {
          //        this.loading = true

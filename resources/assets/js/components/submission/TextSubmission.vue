@@ -164,7 +164,7 @@
 
         created() {
 
-            this.$eventHub.$on('edit-submission', this.editSubmission);
+            this.vm.$on('edit-submission', this.editSubmission);
 
             if(this.full){
                 this.getPhotos()

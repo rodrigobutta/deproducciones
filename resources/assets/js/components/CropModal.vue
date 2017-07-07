@@ -57,7 +57,7 @@
 		props: ['sidebar', 'type'],
 
         created () {
-        	this.$eventHub.$on('crop-photo-uploaded', this.getReady)
+        	this.vm.$on('crop-photo-uploaded', this.getReady)
         },
 
         methods: {
@@ -145,7 +145,7 @@
 
             close () {
             	location.reload()
-	    		this.$eventHub.$emit('close')
+	    		this.vm.$emit('close')
 	    	},
         }
     };

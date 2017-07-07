@@ -17,7 +17,7 @@
             </div>
 
             <div class="flex-space user-select" v-if="!isReply">
-	            <a class="comment-form-guide" @click="$eventHub.$emit('markdown-guide')">
+	            <a class="comment-form-guide" @click="vm.$emit('markdown-guide')">
 	            	Formatting Guide
 	            </a>
 
@@ -154,7 +154,7 @@
 		             * Fire an event to catch by the commenter himself
 		             * (use ajax response instead of pusher for commenter himself)
 		             */
-                    this.$eventHub.$emit('newComment', response.data)
+                    this.vm.$emit('newComment', response.data)
 
         			this.loading = false
                 }).catch((error) => {

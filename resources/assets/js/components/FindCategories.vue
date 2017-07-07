@@ -95,7 +95,7 @@
 
         created () {
             this.getCategories()
-			this.$eventHub.$on('scrolled-to-bottom', this.loadMore)
+			this.vm.$on('scrolled-to-bottom', this.loadMore)
         },
 
         methods: {

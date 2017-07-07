@@ -82,10 +82,16 @@
 	import GifPlayer from '../components/GifPlayer.vue';
 	import Helpers from '../mixins/Helpers';
 
+    // import inViewport from 'vue-in-viewport-mixin';
+
+
     export default {
         props: ['list', 'full'],
 
-        mixins: [Helpers],
+        mixins: [
+            Helpers ////////
+            // inViewport
+        ],
 
         components: {
             WantedSubmission,
@@ -117,8 +123,10 @@
         created () {
         	this.setBookmarked();
         	this.setVoteds();
-			this.$eventHub.$on('photo-viewer', this.showPhotoViewer);
-			this.$eventHub.$on('scape', this.closeViwer);
+			this.vm.$on('photo-viewer', this.showPhotoViewer);
+			this.vm.$on('scape', this.closeViwer);
+
+
         },
 
 	    watch: {
@@ -134,7 +142,19 @@
 
 			'Store.submissionDownVotes' () {
 				this.setVoteds()
-			}
+			},
+
+            // 'inViewport.now': function(visible) {
+            //     if(visible){
+
+            //         console.log('This component ' + this.list.title);
+
+            //         this.vm.$emit('in-viewport')
+
+            //         // this.lazyLoad();
+
+            //     }
+            // }
 		},
 
 		mounted () {
@@ -208,6 +228,22 @@
 				    id: this.list.id
 				})
 			},
+
+
+            // lazyLoad(){
+            //     console.log('lazyLoad: ' + this.list.title);
+
+            //     //     for (var i = 0; i < lazyImages.length; i++) {
+            //     //          if(hasClass(lazyImages[i],'lazy')){
+            //     //             if (elementInViewport(lazyImages[i])) {
+            //     //                 lazyImages[i].setAttribute("src", lazyImages[i].getAttribute("data-src"));
+            //     //                 lazyImages[i].classList.remove("lazy");
+            //     //                 // lazyImages.splice(i, i);
+            //     //             }
+            //     //         }
+            //     //     };
+
+            // },
 
 			/**
 			 * Submits the (quick)comment
@@ -376,7 +412,7 @@
             */
             report() {
                 this.reported = true;
-        		this.$eventHub.$emit('report-submission', this.list.id, this.list.category.name);
+        		this.vm.$emit('report-submission', this.list.id, this.list.category.name);
             },
 
             /**

@@ -132,7 +132,7 @@
         	 * @return void
         	 */
         	refresh() {
-        	    this.$eventHub.$emit('refresh-home');
+        	    this.vm.$emit('refresh-home');
         	},
 
         	/**

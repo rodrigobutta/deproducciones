@@ -23,7 +23,7 @@
 	    	 */
 	    	toggle() {
 	    		this.checked = ! this.checked
-	    		this.$eventHub.$emit('toggle-sidebar')
+	    		this.vm.$emit('toggle-sidebar')
 	    	}
 	    }
 	}

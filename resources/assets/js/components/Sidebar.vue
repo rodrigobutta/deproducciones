@@ -191,10 +191,10 @@ export default {
          * @return void
          */
         homeRoute() {
-            this.$eventHub.$emit('close');
+            this.vm.$emit('close');
 
             if (this.$route.name === 'home') {
-            	this.$eventHub.$emit('refresh-home');
+            	this.vm.$emit('refresh-home');
             }
         },
 
@@ -220,7 +220,7 @@ export default {
     	},
 
         changeRoute: function(newRoute) {
-        	this.$eventHub.$emit('new-route', newRoute)
+        	this.vm.$emit('new-route', newRoute)
         },
     },
 }

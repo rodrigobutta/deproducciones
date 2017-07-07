@@ -118,10 +118,10 @@ export default {
 
     methods: {
         changeRoute: function(newRoute) {
-        	this.$eventHub.$emit('new-route', newRoute)
+        	this.vm.$emit('new-route', newRoute)
         },
         signUp: function(){
-            this.$eventHub.$emit('toggle-sidebar');
+            this.vm.$emit('toggle-sidebar');
             this.mustBeLogin();
         }
     },

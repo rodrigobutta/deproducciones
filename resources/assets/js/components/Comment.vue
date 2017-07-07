@@ -155,9 +155,9 @@
         created () {
         	this.setBookmarked();
         	this.setVoteds();
-            this.$eventHub.$on('newComment', this.newComment);
-            this.$eventHub.$on('patchedComment', this.patchedComment);
-            this.$eventHub.$on('deletedComment', this.deletedComment);
+            this.vm.$on('newComment', this.newComment);
+            this.vm.$on('patchedComment', this.patchedComment);
+            this.vm.$on('deletedComment', this.deletedComment);
         },
 
 		mounted () {
@@ -378,7 +378,7 @@
              *  Report(and block) comment
              */
             report() {
-        		this.$eventHub.$emit('report-comment', this.list.id)
+        		this.vm.$emit('report-comment', this.list.id)
             },
 
             /**

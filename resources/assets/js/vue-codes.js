@@ -27,18 +27,19 @@ import autosize from 'autosize';
 import router from './routes';
 
 
+
+
 /**
  * This is our event bus, which is used for event dispatching. The base is that we create an empty
- * Vue instance. First we fire the event by: "this.$eventHub.$emit('eventName', 'data')"
- * and later we listen for it by: "this.$eventHub.$on('eventName', this.newComment)"
+ * Vue instance. First we fire the event by: "this.vm.$emit('eventName', 'data')"
+ * and later we listen for it by: "this.vm.$on('eventName', this.newComment)"
  *
  *
  * (which is defined in the created() function of the vue componentr (or root instance), after catching the
  * event, passes the data to the defined funciton. In this example case it's newComment() but notice that
  * it doesn't require to be actually written as argumans! ) Happy eventing in your awesome components.
  */
-Vue.prototype.$eventHub = new Vue();
-
+Vue.prototype.vm = new Vue();
 
 /**
  * The very serious and important vue instance!!! This is what gives power to voten's
@@ -127,21 +128,21 @@ const app = new Vue({
         this.setSidebar();
 
         // Let's hear it for the events, shall we?
-        this.$eventHub.$on('start-conversation', this.startConversation);
-        this.$eventHub.$on('report-submission', this.reportSubmission);
-        this.$eventHub.$on('toggle-sidebar', this.toggleSidebar);
-        this.$eventHub.$on('new-route', this.newRoute);
-        this.$eventHub.$on('close', this.closeModals);
-        this.$eventHub.$on('new-modal', this.newModal);
-        this.$eventHub.$on('rules', this.categoryRules);
-        this.$eventHub.$on('login-modal', this.loginModal);
-        this.$eventHub.$on('category-sort', this.categorySort);
-        this.$eventHub.$on('report-comment', this.reportComment);
-        this.$eventHub.$on('moderators', this.categoryModerators);
-        this.$eventHub.$on('markdown-guide', this.openMarkdownGuide);
-        this.$eventHub.$on('crop-user-photo', this.cropUserModal);
-        this.$eventHub.$on('push-notification', this.pushNotification)
-        this.$eventHub.$on('crop-category-photo', this.cropCategoryModal);
+        this.vm.$on('start-conversation', this.startConversation);
+        this.vm.$on('report-submission', this.reportSubmission);
+        this.vm.$on('toggle-sidebar', this.toggleSidebar);
+        this.vm.$on('new-route', this.newRoute);
+        this.vm.$on('close', this.closeModals);
+        this.vm.$on('new-modal', this.newModal);
+        this.vm.$on('rules', this.categoryRules);
+        this.vm.$on('login-modal', this.loginModal);
+        this.vm.$on('category-sort', this.categorySort);
+        this.vm.$on('report-comment', this.reportComment);
+        this.vm.$on('moderators', this.categoryModerators);
+        this.vm.$on('markdown-guide', this.openMarkdownGuide);
+        this.vm.$on('crop-user-photo', this.cropUserModal);
+        this.vm.$on('push-notification', this.pushNotification)
+        this.vm.$on('crop-category-photo', this.cropCategoryModal);
     },
 
     mounted() {
@@ -173,11 +174,11 @@ const app = new Vue({
          * @return void
          */
         scrolled(event) {
-        	this.$eventHub.$emit('scrolled');
+        	this.vm.$emit('scrolled');
 
             let box = event.target;
             if ( (box.scrollHeight - box.scrollTop) < (box.clientHeight + 100) ) {
-                this.$eventHub.$emit('scrolled-to-bottom');
+                this.vm.$emit('scrolled-to-bottom');
             }
         },
 
@@ -235,7 +236,7 @@ const app = new Vue({
             this.closeModals();
 
             if (this.$route.name === 'home') {
-            	this.$eventHub.$emit('refresh-home');
+            	this.vm.$emit('refresh-home');
             }
         },
 
@@ -428,7 +429,7 @@ const app = new Vue({
          */
         startConversation(contact) {
             this.changeRoute('messages')
-            this.$eventHub.$emit('conversation', contact)
+            this.vm.$emit('conversation', contact)
         },
 
         /**
@@ -586,7 +587,7 @@ const app = new Vue({
 
             event.preventDefault()
             this.sortFilter = sort
-            this.$eventHub.$emit('sort-by', sort)
+            this.vm.$emit('sort-by', sort)
         },
 
         /**
@@ -653,9 +654,9 @@ const app = new Vue({
 			        break
     	        case 82: // "r"
                     if (this.$route.name === 'home'){
-                        this.$eventHub.$emit('refresh-home')
+                        this.vm.$emit('refresh-home')
                     }else if(this.$route.name === 'category-submissions'){
-                        this.$eventHub.$emit('refresh-category-submissions')
+                        this.vm.$emit('refresh-category-submissions')
                     }
 
 			        break

@@ -163,7 +163,7 @@
 
 .img .profile-post-content img {
     cursor: zoom-in;
-    max-height: 400px;
+    max-height: calc(100vh - 100px);
 }
 
 .gif .profile-post-content,

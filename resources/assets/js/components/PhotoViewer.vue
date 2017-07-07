@@ -2,47 +2,11 @@
     <div class="photo-viewer-wrapper user-select">
         <div class="photo-viewer-header">
             <div class="flex-display">
-                <div class="info desktop-only">
-                    <h3>
-                        {{ str_limit(list.title, 40) }}
-                    </h3>
 
-                    <small class="go-gray">
-                        Submitted by
-                        <router-link :to="'/' + '@' + list.owner.username">@{{ list.owner.username }}</router-link>
-                        to
-                        <router-link :to="'/c/' + list.category_name">#{{ list.category_name }}</router-link>
-                        -
-                        <router-link :to="'/c/' + list.category_name + '/' + list.slug">
-                            {{ date }}
-                        </router-link>
-                    </small>
-                </div>
 
-                <div class="voting-wrapper">
-                    <a class="fa-stack" @click="$emit('bookmark')"
-    					data-toggle="tooltip" data-placement="bottom" title="Bookmark">
-    					<i class="v-icon h-yellow" :class="bookmarked ? 'go-yellow v-unbookmark' : 'v-bookmark'"></i>
-    				</a>
-
-                    <a class="fa-stack align-right" @click="$emit('upvote')"
-                        data-toggle="tooltip" data-placement="bottom" title="Upvote">
-                        <i class="v-icon v-up-fat" :class="upvoted ? 'go-primary' : 'go-gray'"></i>
-                    </a>
-
-                    <div class="detail">
-                        {{ points }} Points
-                    </div>
-
-                    <a class="fa-stack align-right" @click="$emit('downvote')"
-                        data-toggle="tooltip" data-placement="bottom" title="Downvote">
-                        <i class="v-icon v-down-fat" :class="downvoted ? 'go-red' : 'go-gray'"></i>
-                    </a>
-                </div>
-
-                <div class="counter-wrapper" v-if="isAlbum">
-                    {{ this.counter + 1 }} / {{ photos.length }}
-                </div>
+                <!-- <div class="counter-wrapper" v-if="isAlbum">
+                    {{ this.counter + 1 }} / {{ list.length }}
+                </div> -->
             </div>
 
             <div>
@@ -53,19 +17,19 @@
         </div>
 
         <div class="photo-wrapper" v-if="!isAlbum">
-            <img :src="list.data.path" :alt="list.title" @click="$emit('close')">
+            <img :src="list[0].path"  @click="$emit('close')">
         </div>
 
         <div id="loading-wrapper" v-if="loading && isAlbum">
             <moon-loader :loading="loading && isAlbum" :size="'50px'" :color="'#777'" class="form-loader"></moon-loader>
         </div>
 
-        <div class="photo-album-wrapper" v-if="isAlbum && !loading">
+        <div class="photo-viewer" v-if="isAlbum && !loading">
             <i class="v-icon pointer v-previous gallery-button desktop-only" aria-hidden="true" @click="previous" :class="counter > 0 ? '' : 'display-hidden'"></i>
 
-            <img :src="currentPhoto" :alt="list.title" @click="$emit('close')">
+            <img :src="currentPhoto" @click="$emit('close')" v-if="!loading">
 
-            <i class="v-icon pointer v-next gallery-button desktop-only" aria-hidden="true" @click="next" :class="counter < (photos.length - 1) ? '' : 'display-hidden'"></i>
+            <i class="v-icon pointer v-next gallery-button desktop-only" aria-hidden="true" @click="next" :class="counter < (list.length - 1) ? '' : 'display-hidden'"></i>
         </div>
 
         <div class="flex-space" v-if="!loading && isAlbum">
@@ -73,7 +37,7 @@
                 Previous
             </button>
 
-            <button class="v-button" :class="counter < (photos.length - 1) ? '' : 'display-hidden'" @click="next">
+            <button class="v-button" :class="counter < (list.length - 1) ? '' : 'display-hidden'" @click="next">
                 Next
             </button>
         </div>
@@ -132,7 +96,7 @@
         mixins: [Helpers],
 
         props: [
-            'points', 'upvoted', 'downvoted', 'bookmarked', 'list', 'photoindex'
+            'list', 'photoindex'
         ],
 
         data: function () {
@@ -146,7 +110,11 @@
 
         computed: {
             isAlbum(){
-                return this.list.data.album
+
+                // console.log(this.list);
+
+                // return this.list.data.album
+                return this.list.length > 1
             },
 
             date () {
@@ -155,13 +123,15 @@
         },
 
         created () {
+
+            // console.log(this.list);
+
+            this.currentPhoto = this.list[this.photoindex].path
+
             this.setCounter()
 
             window.addEventListener('keyup', this.keyup)
 
-            if (this.isAlbum) {
-                this.getPhotos()
-            }
         },
 
         mounted: function() {
@@ -175,12 +145,6 @@
                 if (this.photoindex) this.counter = this.photoindex
             },
 
-            /**
-             * Catches the event fired for the pressed key, and runs the neccessary methods.
-             *
-             * @param keyup event
-             * @return void
-             */
             keyup(event){
                 // right
                 if (event.keyCode == 39) {
@@ -198,32 +162,38 @@
                 }
             },
 
-            getPhotos: function () {
-                this.loading = true
-
-        		axios.get('/submission-photos', {
-        			params: {
-        				id: this.list.id
-        			}
-        		} ).then((response) => {
-                    this.photos = response.data
-                    this.currentPhoto = this.photos[this.counter].path
-                    this.loading = false
-                });
-        	},
-
             previous(){
                 if (this.counter > 0) {
                     this.counter --
-                    this.currentPhoto = this.photos[this.counter].path
+                    // this.currentPhoto = this.list[this.counter].path
+                    this.loadPhoto(this.list[this.counter].path);
                 }
             },
 
             next(){
-                if (this.counter < (this.photos.length - 1)) {
+                if (this.counter < (this.list.length - 1)) {
                     this.counter ++
-                    this.currentPhoto = this.photos[this.counter].path
+                    this.loadPhoto(this.list[this.counter].path)
+                    // this.currentPhoto = this.list[this.counter].path
                 }
+            },
+
+
+            loadPhoto(photo){
+
+                this.loading = true;
+
+                var img, that;
+               img = new Image();
+               that = this;
+
+               img.onload = function(){
+                that.currentPhoto = photo
+                    that.loading = false;
+               }
+               img.src = photo;
+
+
             }
         }
     };

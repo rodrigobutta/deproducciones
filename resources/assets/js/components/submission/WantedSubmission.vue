@@ -15,12 +15,15 @@
             <textarea class="form-control v-input-big" rows="2" id="title" placeholder="Title.." v-show="editing" v-model="editedTitle"></textarea>
 
             <!-- foto unica o galeria de fotos en vista full -->
-            <div v-if="!isAlbum && submission.thumbnail">
+            <!-- <div v-if="!isAlbum && submission.thumbnail">
                 <img v-bind:src="submission.thumbnail" v-bind:alt="submission.title" @click="$emit('zoom')" class="big-thumbnail"/>
             </div>
             <div v-if="isAlbum">
                 <img v-bind:src="value.thumbnail_path" v-for="(value, index) in photos" @click="$emit('zoom', index)" v-bind:alt="submission.title" class="big-thumbnail" />
-            </div>
+            </div> -->
+
+            <photo-gallery :list="submission.photos"></photo-gallery>
+
 
             <!-- drop de fotos e full editable -->
             <div class="form-group" v-show="editing" >
@@ -174,7 +177,7 @@
 
         created() {
 
-            this.$eventHub.$on('edit-submission', this.editSubmission);
+            this.vm.$on('edit-submission', this.editSubmission);
 
 
 

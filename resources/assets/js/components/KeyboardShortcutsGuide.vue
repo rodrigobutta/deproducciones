@@ -146,7 +146,7 @@
 
 	    methods: {
 	    	close () {
-	    		this.$eventHub.$emit('close')
+	    		this.vm.$emit('close')
 	    	},
 	    },
 	}

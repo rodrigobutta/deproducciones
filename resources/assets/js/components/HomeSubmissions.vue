@@ -48,8 +48,8 @@
 
 	    created: function() {
 	        this.getSubmissions();
-			this.$eventHub.$on('scrolled-to-bottom', this.loadMore);
-			this.$eventHub.$on('refresh-home', this.refresh);
+			this.vm.$on('scrolled-to-bottom', this.loadMore);
+			this.vm.$on('refresh-home', this.refresh);
 	    },
 
 	    watch: {

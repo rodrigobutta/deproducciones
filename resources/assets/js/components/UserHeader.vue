@@ -172,10 +172,10 @@ export default {
 
     		axios.post('/upload-temp-avatar', this.fileUploadFormData)
 				.then((response) => {
-					this.$eventHub.$emit('crop-photo-uploaded', response.data)
+					this.vm.$emit('crop-photo-uploaded', response.data)
 	            });
 
-    		this.$eventHub.$emit('crop-user-photo')
+    		this.vm.$emit('crop-user-photo')
 		},
 
     	/**

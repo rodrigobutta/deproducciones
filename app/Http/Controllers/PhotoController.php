@@ -44,7 +44,26 @@ class PhotoController extends Controller
 
         try {
             $photo->path = $this->uploadImg($request->file('photo'), 'submissions/img');
-            $photo->thumbnail_path = $this->createThumbnail($photo->path, 1200, null, 'submissions/img/thumbs');
+
+            list($w, $h) = getimagesize($photo->path);
+            $photo->width = $w;
+            $photo->height = $h;
+
+            $photo->thumbnail_path = $this->createThumbnail($photo->path, 1200, null, 'submissions/img/thumbs',70);
+
+            list($w, $h) = getimagesize($photo->thumbnail_path);
+            $photo->thumbnail_width = $w;
+            $photo->thumbnail_height = $h;
+
+
+            $photo->blurry_path = $this->createThumbnail($photo->path, 300, null, 'submissions/img/blurry',1,true,50);
+
+            // list($w, $h) = getimagesize($photo->blurry_path);
+            // $photo->blurry_path_width = $w;
+            // $photo->blurry_path_height = $h;
+
+
+
         } catch (\Exception $exception) {
             return response('Ooops, something went wrong', 500);
         }

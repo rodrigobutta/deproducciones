@@ -185,7 +185,7 @@ export default {
     created () {
         this.getContacts()
         this.listen()
-        this.$eventHub.$on('conversation', this.getMessagesByUser)
+        this.vm.$on('conversation', this.getMessagesByUser)
     },
 
     watch: {
@@ -347,7 +347,7 @@ export default {
     	}, 600),
 
     	close () {
-    		this.$eventHub.$emit('close')
+    		this.vm.$emit('close')
     	},
 
         backToContacts () {
@@ -508,7 +508,7 @@ export default {
                             icon: avatar
                         }
 
-        				this.$eventHub.$emit('push-notification', data)
+        				this.vm.$emit('push-notification', data)
                     }
 
 	            }).listen('MessageRead', (e) => {

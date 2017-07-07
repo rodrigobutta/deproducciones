@@ -93,7 +93,7 @@
         	 * @return void
         	 */
         	close () {
-        		this.$eventHub.$emit('close')
+        		this.vm.$emit('close')
         	},
 
             /**
@@ -179,7 +179,7 @@
                             icon: avatar
                         }
 
-        				this.$eventHub.$emit('push-notification', data)
+        				this.vm.$emit('push-notification', data)
                     }
                 })
             },

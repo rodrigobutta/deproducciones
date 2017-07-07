@@ -91,11 +91,11 @@
 <!-- 				<div class="box-typical-footer profile-post-meta user-select">
 
 				</div> -->
-
+<!--
 				<photo-viewer v-if="photoViewer" :bookmarked="bookmarked" :points="points" @close="closeViwer" :list="list" :photoindex="photoViewerIndex"
 					:upvoted="upvoted" :downvoted="downvoted" @bookmark="bookmark" @upvote="voteUp" @downvote="voteDown"
 				></photo-viewer>
-
+ -->
 				<embed-viewer v-if="embedViewer" :bookmarked="bookmarked" :points="points" @close="closeEmbed" :list="list"
 					:upvoted="upvoted" :downvoted="downvoted" @bookmark="bookmark" @upvote="voteUp" @downvote="voteDown"
 				></embed-viewer>
@@ -115,7 +115,7 @@
     // import LinkSubmission from '../components/submission/LinkSubmission.vue';
     // import ImgSubmission from '../components/submission/ImgSubmission.vue';
     // import GifSubmission from '../components/submission/GifSubmission.vue';
-	import PhotoViewer from '../components/PhotoViewer.vue';
+	// import PhotoViewer from '../components/PhotoViewer.vue';
 	import EmbedViewer from '../components/Embed.vue';
 	import GifPlayer from '../components/GifPlayer.vue';
 	import Helpers from '../mixins/Helpers';
@@ -131,7 +131,7 @@
             // LinkSubmission,
             // ImgSubmission,
 			// GifSubmission,
-			PhotoViewer,
+			// PhotoViewer,
 			EmbedViewer,
 			GifPlayer,
         },
@@ -143,8 +143,8 @@
                 downvoted: false,
                 hidden: false,
                 reported: false,
-				photoViewerIndex: null,
-				photoViewer: false,
+				// photoViewerIndex: null,
+				// photoViewer: false,
 				embedViewer: false,
 				gifPlayer: false,
                 auth,
@@ -155,8 +155,8 @@
         created () {
         	this.setBookmarked()
         	this.setVoteds()
-			this.$eventHub.$on('photo-viewer', this.showPhotoViewer)
-			this.$eventHub.$on('scape', this.closeViwer)
+			// this.vm.$on('photo-viewer', this.showPhotoViewer)
+			// this.vm.$on('scape', this.closeViwer)
         },
 
 	    watch: {
@@ -267,7 +267,7 @@
         	 * @return void
         	 */
         	edit() {
-        	    this.$eventHub.$emit('edit-submission');
+        	    this.vm.$emit('edit-submission');
         	},
 
         	/**
@@ -421,7 +421,7 @@
             */
             report () {
                 this.reported = true
-        		this.$eventHub.$emit('report-submission', this.list.id, this.list.category_name)
+        		this.vm.$emit('report-submission', this.list.id, this.list.category_name)
             },
 
             /**
@@ -513,12 +513,12 @@
             	Store.submissionDownVotes.push(id)
             },
 
-			showPhotoViewer(index = null){
-				if (index !== null) {
-					this.photoViewerIndex = index
-				}
-	            this.photoViewer = true
-	        },
+			// showPhotoViewer(index = null){
+			// 	if (index !== null) {
+			// 		this.photoViewerIndex = index
+			// 	}
+	  //           this.photoViewer = true
+	  //       },
 
 			showGifPlayer() {
 				console.log('works')
@@ -532,9 +532,9 @@
 				this.gifPlayer = true
 			},
 
-			closeViwer(){
-				this.photoViewer = false
-			},
+			// closeViwer(){
+			// 	this.photoViewer = false
+			// },
 
 			closeEmbed(){
 				this.embedViewer = false

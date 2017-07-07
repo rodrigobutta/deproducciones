@@ -93,7 +93,7 @@
             this.getSubmission();
             this.getComments();
             this.listen();
-            this.$eventHub.$on('newComment', this.newComment);
+            this.vm.$on('newComment', this.newComment);
         },
 
 	    watch: {
@@ -103,7 +103,7 @@
 	            this.clearContent();
 	            this.listen();
 	            this.updateCategoryStore();
-	            this.$eventHub.$on('newComment', this.newComment);
+	            this.vm.$on('newComment', this.newComment);
 			}
 		},
 
@@ -203,11 +203,11 @@
             listen() {
                 Echo.channel('submission.' + this.$route.params.slug)
                     .listen('CommentCreated', event => {
-                    	this.$eventHub.$emit('newComment', event.comment)
+                    	this.vm.$emit('newComment', event.comment)
                     }).listen('CommentWasPatched', event => {
-                    	this.$eventHub.$emit('patchedComment', event.comment)
+                    	this.vm.$emit('patchedComment', event.comment)
                     }).listen('CommentWasDeleted', event => {
-                    	this.$eventHub.$emit('deletedComment', event.comment)
+                    	this.vm.$emit('deletedComment', event.comment)
                     });
 
                 // we can't do presence channel if the user is a guest

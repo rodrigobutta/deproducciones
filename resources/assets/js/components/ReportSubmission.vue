@@ -113,7 +113,7 @@ export default {
         * @return void
         */
         close () {
-    		this.$eventHub.$emit('close')
+    		this.vm.$emit('close')
         },
     },
 }

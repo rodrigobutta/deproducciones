@@ -1,6 +1,6 @@
 <template>
 	<div class="col-7 padding-bottom-10">
-		<submission :list="submission" v-for="submission in uniqueList" v-bind:key="submission.id"></submission>
+		<submission :list="submission" v-for="submission in uniqueList" v-bind:key="submission.id" :in-viewport-once="true" :in-viewport-offset="0"></submission>
 
 		<no-content v-if="nothingFound" :text="'Oooops, I hate to say it but there are no submissions to show you here'"></no-content>
 
@@ -17,8 +17,12 @@ import NoContent from '../components/NoContent.vue';
 import NoMoreItems from '../components/NoMoreItems.vue';
 import Helpers from '../mixins/Helpers';
 
+
+
 export default {
-	mixins: [Helpers],
+	mixins: [
+        Helpers
+    ],
 
     components: {
         Submission,
@@ -35,20 +39,25 @@ export default {
         	preload,
             submissions: [],
             loading: true,
-			page: 0
+			page: 0,
+
+            // lazyImages
         }
     },
 
    	created () {
 		this.clear()
-		this.$eventHub.$on('scrolled-to-bottom', this.loadMore)
-		this.$eventHub.$on('refresh-category-submissions', this.clear)
+        // this.vm.$on('scrolled', this.scroll)
+		this.vm.$on('scrolled-to-bottom', this.loadMore)
+		this.vm.$on('refresh-category-submissions', this.clear)
    	},
 
     watch: {
 		'$route': function () {
 			this.clear()
-		}
+		},
+
+
 	},
 
 	computed: {
@@ -91,6 +100,21 @@ export default {
 
 
     methods: {
+
+        // scroll () {
+
+        //     console.log('scrolling')
+        // },
+
+        // processLazy(){
+        //     console.log("processLazy");
+
+        //     this.lazyImages = Array.prototype.slice.call(document.getElementsByClassName("lazy"));
+
+        //     console.log(this.lazyImages);
+        // },
+
+
 		loadMore () {
 			if (Store.contentRouter == 'content' && !this.loading && !this.NoMoreItems) {
 				this.getSubmissions();
@@ -154,6 +178,8 @@ export default {
 
 				this.loading = false;
 
+                // this.processLazy();
+
 				// clear the preload
 				delete preload.submissions;
 
@@ -180,6 +206,9 @@ export default {
 				}
 
 				this.loading = false
+
+                // this.processLazy();
+
             });
         }
     }

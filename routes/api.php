@@ -81,6 +81,12 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/category-patch', 'CategoryController@patch');
     Route::get('/get-categories', 'CategoryController@getCategories');
 
+
+
+    // Profession
+    Route::get('/get-professions', 'ProfessionController@getProfessions');
+
+
     // rule
     Route::post('/create-rule', 'RulesController@store');
     Route::post('/patch-rule', 'RulesController@patch');

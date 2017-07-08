@@ -220,6 +220,9 @@
         },
 
         methods: {
+
+
+
 			removeThumbnail(){
 				this.list.data.thumbnail = null
 				this.list.data.img = null
@@ -230,26 +233,6 @@
 			},
 
 
-            // lazyLoad(){
-            //     console.log('lazyLoad: ' + this.list.title);
-
-            //     //     for (var i = 0; i < lazyImages.length; i++) {
-            //     //          if(hasClass(lazyImages[i],'lazy')){
-            //     //             if (elementInViewport(lazyImages[i])) {
-            //     //                 lazyImages[i].setAttribute("src", lazyImages[i].getAttribute("data-src"));
-            //     //                 lazyImages[i].classList.remove("lazy");
-            //     //                 // lazyImages.splice(i, i);
-            //     //             }
-            //     //         }
-            //     //     };
-
-            // },
-
-			/**
-			 * Submits the (quick)comment
-			 *
-			 * @return void
-			 */
 			submit(event){
 				event.preventDefault()
 

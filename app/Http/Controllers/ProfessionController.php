@@ -201,15 +201,15 @@ class ProfessionController extends Controller
      *
      * @return Illuminate\Support\Collection
      */
-    public function getCategories(Request $request)
+    public function getProfessions(Request $request)
     {
         $this->validate($request, [
             'name' => 'required|alpha_num|max:25',
         ]);
 
-        return Profession::where('name', 'like', '%'.$request->name.'%')
-                    ->orderBy('subscribers', 'desc')
-                    ->select('name')->take(100)->get()->pluck('name');
+        return Profession::where('title', 'like', '%'.$request->name.'%')
+                    ->orWhere('slug', 'like', '%'.$request->name.'%')
+                    ->select('id','title')->take(100)->get();
     }
 
     /**

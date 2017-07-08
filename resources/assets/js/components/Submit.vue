@@ -51,30 +51,21 @@
                     <markdown :text="fText"></markdown>
               	</div>
 
-               <!--  <div class="form-group" v-if="submissionType == 'link'">
-                    <input type="text" class="form-control v-input-big" id="url" name="url" placeholder="URL ..." autocomplete="off" v-model="submitURL" :disabled="loading">
 
-                    <small class="text-muted go-red" v-for="e in errors.url">{{ e }}</small>
-                </div> -->
+                <div class="form-group" >
+                    <multiselect v-model="tags" tag-placeholder="Add this as new tag" placeholder="Search or add a tag" label="name" :options="suggestedTags" :multiple="true" :taggable="true" @tag="addTag"></multiselect>
+                    <pre class="language-json"><code>{{ tags  }}</code></pre>
+                </div>
 
-               <!--  <div class="form-group" v-if="submissionType == 'gif'">
-                    <input type="file" class="form-control v-input-big" id="gif" name="gif"
-                    @change="gifSelected" accept="image/gif" :disabled="loading">
-
-                    <small class="text-muted go-red" v-for="e in errors.gif">{{ e }}</small>
-                </div> -->
-
-                <!-- <div v-show="submissionType == 'img'"> -->
-                    <div class="form-group" >
-                        <form action="/upload-photo" class="dropzone" method="post" id="addPhotosForm">
-                            <input type="hidden" name="_token" v-bind:value="csrf">
-                            <div class="fallback">
-                                <input name="photo" type="file" multiple />
-                            </div>
-                        </form>
-                        <small class="text-muted go-red" v-for="e in errors.photos">{{ e }}</small>
-                    </div>
-                <!-- </div> -->
+                <div class="form-group" >
+                    <form action="/upload-photo" class="dropzone" method="post" id="addPhotosForm">
+                        <input type="hidden" name="_token" v-bind:value="csrf">
+                        <div class="fallback">
+                            <input name="photo" type="file" multiple />
+                        </div>
+                    </form>
+                    <small class="text-muted go-red" v-for="e in errors.photos">{{ e }}</small>
+                </div>
 
                 <div class="form-group">
                     <multiselect :value="selectedCat" :options="suggestedCats" @input="updateSelected" @search-change="getSuggestedCats" :placeholder="'#channel...'"></multiselect>
@@ -83,8 +74,18 @@
 
                 <hr class="dashed-hr">
 
-                <div class="flex-space">
+                <div class="form-group">
+                    <submission-form-wanting v-for="(row, index) in rows" :itemdata="itemList" :row="row" v-on:remove="removeRow(index)"></submission-form-wanting>
+                    <pre class="language-json"><code>{{ rows  }}</code></pre>
+                </div>
 
+
+                <button type="button" class="v-button v-button--green pull-right" @click="addRow">Add</button>
+
+                <hr class="dashed-hr">
+
+
+                <div class="flex-space">
 
                     <button type="submit" class="v-button v-button--green pull-right" @click="submit" :disabled="!goodToGo">
                         Submit
@@ -100,6 +101,7 @@
     import Markdown from '../components/Markdown.vue'
     import Multiselect from 'vue-multiselect'
     import MoonLoader from '../components/MoonLoader.vue'
+    import SubmissionFormWanting from '../components/SubmissionFormWanting.vue'
 
     window.Dropzone = require('../libs/dropzone')
     Dropzone.autoDiscover = false
@@ -109,7 +111,8 @@
        components: {
             Multiselect,
             MoonLoader,
-            Markdown
+            Markdown,
+            SubmissionFormWanting
         },
 
         data () {
@@ -118,6 +121,8 @@
                 fTitle: '',
                 preview: false,
                 fText: '',
+                tags: [],
+                suggestedTags :[],
                 // submitURL: '',
                 photo: '',
                 errors: [],
@@ -130,6 +135,16 @@
                 submissionType: 'wanted',
                 photos: [],
                 Store,
+
+                rows: [],
+                itemList: [
+                    { code: 'Select an Item', description: '', unitprice: ''},
+                    { code: 'One', description: 'Item A', unitprice: '10'},
+                    { code: 'Two', description: 'Item B', unitprice: '22'},
+                    { code: 'Three', description: 'Item C', unitprice: '56'}
+                ]
+
+
                 // gifUploadFormData: new FormData()
             }
         },
@@ -145,6 +160,8 @@
         created () {
             this.setDefaultCategories()
             this.submitApi()
+
+            this.loadSuggestedTags()
         },
 
 		mounted: function () {
@@ -177,6 +194,15 @@
         },
 
         methods: {
+
+           addRow(){
+             this.rows.push({profession: '', description: '', unitprice: ''}); // what to push unto the rows array?
+          },
+          removeRow(index){
+             this.rows.splice(index,1); // why is this removing only the last row?
+          },
+
+
             /**
              * Used for setting the values using API. This will get extended in the future to support
              * voten sharing buttons! But for now we are just going to use it for setting the default
@@ -203,6 +229,29 @@
                 })
 
                 this.suggestedCats = array
+            },
+
+
+
+            addTag (newTag) {
+                  const tag = {
+                    name: newTag,
+                    code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
+                  }
+                  this.suggestedTags.push(tag)
+                  this.tags.push(tag)
+            },
+
+            loadSuggestedTags(){
+
+                var options = [
+                        { name: 'Vue.js', code: 'vu' },
+                        { name: 'Javascript', code: 'js' },
+                        { name: 'Monterail', code: 'pl' },
+                        { name: 'Open Source', code: 'os' }
+                      ]
+
+                this.suggestedTags = options
             },
 
             // used for multi select

@@ -81,6 +81,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/category-patch', 'CategoryController@patch');
     Route::get('/get-categories', 'CategoryController@getCategories');
 
+    // Tag
+    Route::get('/get-tags', 'TagController@getTags');
+    Route::get('/get-top-tags', 'TagController@getTopTags');
 
 
     // Profession

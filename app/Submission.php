@@ -18,14 +18,14 @@ class Submission extends Model
     protected $fillable = [
         'data', 'title', 'slug', 'type', 'category_id', 'category_name', 'rate',
         'upvotes', 'downvotes', 'user_id', 'data', 'nsfw', 'approved_at',
-        'deleted_at', 'comments_number', 'body', 'thumbnail',
+        'deleted_at', 'comments_number', 'body', 'custom_tags',
     ];
 
     protected $casts = [
         'data' => 'json',
     ];
 
-    protected $with = ['owner','category', 'wantsFor', 'photos'];
+    protected $with = ['owner','category', 'wantsFor', 'photos', 'tags'];
 
     protected static $recordEvents = ['created'];
 
@@ -87,7 +87,10 @@ class Submission extends Model
         return $this->hasMany(Photo::class, 'submission_id');
     }
 
-
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class, 'submission_tags', 'submission_id', 'tag_id');
+    }
 
 
     /**

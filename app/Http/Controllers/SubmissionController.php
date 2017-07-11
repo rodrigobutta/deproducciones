@@ -90,74 +90,32 @@ class SubmissionController extends Controller
             return response('You have been banned from submitting to #'.$request->category_name.'. If you think there has been some kind of mistake, please contact the moderators of #'.$request->name.'.', 500);
         }
 
-        // if ($request->type == 'link') {
-        //     $this->validate($request, [
-        //         'url'   => 'required|url',
-        //         'title' => 'required|between:7,150',
-        //         'name'  => 'required|exists:categories',
-        //     ]);
 
-        //     // check if it's in the blocked domains list
-        //     if ($this->isDomainBlocked($request->url, $request->category_name)) {
-        //         return response("The submitted website is in the channel's blacklist. Please find another source.", 500);
-        //     }
-
-        //     try {
-        //         $data = $this->linkSubmission($request);
-        //     } catch (\Exception $e) {
-        //         $data = [
-        //             'url'           => $request->url,
-        //             'title'         => $request->title,
-        //             'description'   => null,
-        //             'type'          => 'link',
-        //             'embed'         => null,
-        //             'img'           => null,
-        //             'thumbnail'     => null,
-        //             'providerName'  => null,
-        //             'publishedTime' => null,
-        //             'domain'        => domain($request->url),
-        //         ];
-        //     }
-        // }
-
-        // if ($request->type == 'img') {
-        //     $this->validate($request, [
-        //         'title'  => 'required|between:7,150',
-        //         'photos' => 'required',
-        //         'name'   => 'required|exists:categories',
-        //     ]);
-
-        //     $data = $this->imgSubmission($request);
-        // // }
-
-        // $photo = Photo::where('id', $request->input('photos')[0])->firstOrFail();
+        $this->validate($request, [
+            'title' => 'required|between:7,150',
+            // 'type'  => 'required|in:link,img,text',
+            'category_name'  => 'required',
+        ]);
 
 
-        // if ($request->type == 'gif') {
-        //     $this->validate($request, [
-        //         'title' => 'required|between:7,150',
-        //         'gif'   => 'required|mimes:gif|max:40960',
-        //         'name'  => 'required|exists:categories',
-        //     ]);
 
-        //     try {
-        //         $data = $this->gifSubmission($request);
-        //     } catch (\Exception $exception) {
-        //         app('sentry')->captureException($exception);
 
-        //         return response("We couldn't process this GIF, please try another one. ", 500);
-        //     }
-        // }
+        $custom_tags = '';
+        $arr_tags = [];
+        foreach ($request->tags as $key => $i) {
 
-        // if ($request->type == 'text') {
-            $this->validate($request, [
-                'title' => 'required|between:7,150',
-                // 'type'  => 'required|in:link,img,text',
-                'category_name'  => 'required',
-            ]);
+            if($i['id']>0){
+                array_push($arr_tags, $i['id']);
+            }
+            else{
+                $custom_tags .= ',' . strtolower($i['name']);
+            }
 
-            // $data = $this->textSubmission($request);
-        // }
+        }
+        $custom_tags = ltrim($custom_tags,',');
+
+
+
 
         $category = Category::where('name', $request->category_name)->select('id', 'nsfw', 'name')->firstOrFail();
 
@@ -174,7 +132,7 @@ class SubmissionController extends Controller
                 'user_id'       => $user->id,
                 // 'data'          => $data,
                 'body'          => $request->text,
-                // 'thumbnail'     => '11111',
+                'custom_tags'     => $custom_tags
 
             ]);
 
@@ -183,15 +141,31 @@ class SubmissionController extends Controller
         } catch (\Exception $exception) {
             app('sentry')->captureException($exception);
 
-            // var_dump($exception);
+            var_dump($exception);
 
             return response('Ooops, something went wrong', 500);
         }
 
+
+        $tmp_arr = [];
+        foreach ($request->wanted as $key => $i) {
+            $tmp_arr[$i['profession']['id']]['description'] = $i['description'];
+            $tmp_arr[$i['profession']['id']]['order'] = $key;
+            $tmp_arr[$i['profession']['id']]['status'] = 0;
+        }
+        $submission->wantsFor()->sync($tmp_arr);
+
+
+        $submission->tags()->sync($arr_tags);
+
+
+
+
         // Update the submission_id field in photos (We just found access to the submission_id)
-        // if ($request->type == 'img') {
-            DB::table('photos')->whereIn('id', $request->input('photos'))->update(['submission_id' => $submission->id]);
-        // }
+        DB::table('photos')->whereIn('id', $request->input('photos'))->update(['submission_id' => $submission->id]);
+
+
+
 
         // try {
 

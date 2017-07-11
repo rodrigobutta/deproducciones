@@ -236,7 +236,7 @@
             addTag (newTag) {
                   const tag = {
                     name: newTag,
-                    code: newTag.substring(0, 2) + Math.floor((Math.random() * 10000000))
+                    id: 0, //newTag.substring(0, 2)
                   }
                   this.suggestedTags.push(tag)
                   this.tags.push(tag)
@@ -244,14 +244,29 @@
 
             loadSuggestedTags(){
 
-                var options = [
-                        { name: 'Vue.js', code: 'vu' },
-                        { name: 'Javascript', code: 'js' },
-                        { name: 'Monterail', code: 'pl' },
-                        { name: 'Open Source', code: 'os' }
-                      ]
 
-                this.suggestedTags = options
+                let array = []
+
+                axios.get( '/get-top-tags', {
+                    params: {
+                        name: ''
+                    }
+                }).then((response) => {
+
+                    console.log(response.data)
+
+                    this.suggestedTags = response.data
+                })
+
+                // var array = [
+                //         { name: 'Vue.js', code: 'vu' },
+                //         { name: 'Javascript', code: 'js' },
+                //         { name: 'Monterail', code: 'pl' },
+                //         { name: 'Open Source', code: 'os' }
+                //       ]
+
+
+                // this.suggestedTags = array
             },
 
             // used for multi select
@@ -288,6 +303,8 @@
                     category_name: this.selectedCat,
                     type: this.submissionType,
                     photos: this.photos,
+                    wanted: this.rows,
+                    tags: this.tags,
                 }).then((response) => {
                     // success
                     this.errors = []
@@ -347,6 +364,7 @@
                 }).then((response) => {
                     this.suggestedCats = response.data
                 })
+
             }, 600),
 
         },

@@ -79,6 +79,14 @@
                             </li>
                         </ul>
 
+                        <h3>tags</h3>
+                        <ul class="menu-list">
+                            <li v-for="item in submission.tags">
+                                <a :href="item.id" class="v-channels-text">{{ item.name }}</a>
+                            </li>
+                            {{ submission.custom_tags }}
+                        </ul>
+
                     </div>
                     <!-- submission indexing pages -->
                     <div v-else>

@@ -82,7 +82,9 @@ const app = new Vue({
         reportCommentId: '',
         sidebar: true,
         sortFilter: 'hot',
-        pageTitle: document.title
+        pageTitle: document.title,
+
+        // scrolled: false
     },
 
     computed: {
@@ -123,6 +125,9 @@ const app = new Vue({
     created: function() {
         window.addEventListener('keydown', this.keydown);
 
+
+        window.addEventListener('scroll', this.scrolled);
+
         this.fillBasicStore();
 
         this.setSidebar();
@@ -145,6 +150,10 @@ const app = new Vue({
         this.vm.$on('crop-category-photo', this.cropCategoryModal);
     },
 
+    destroyed () {
+      window.removeEventListener('scroll', this.scrolled);
+    },
+
     mounted() {
         this.$nextTick(function() {
             this.loadCheckBox()
@@ -154,6 +163,23 @@ const app = new Vue({
     },
 
     methods: {
+
+        scrolled () {
+            this.vm.$emit('scrolled');
+            // console.log('scrolled')
+
+            var body = document.body,
+                html = document.documentElement;
+
+            var height = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
+
+            if ( (height - window.innerHeight) < (window.scrollY ) ) {
+                // console.log('scrolled-to-bottom');
+                this.vm.$emit('scrolled-to-bottom');
+            }
+
+        },
+
         openMarkdownGuide() {
             this.changeModalRoute('markdown-guide')
         },
@@ -173,14 +199,16 @@ const app = new Vue({
          *
          * @return void
          */
-        scrolled(event) {
-        	this.vm.$emit('scrolled');
+        // scrolled(event) {
+        // 	this.vm.$emit('scrolled');
 
-            let box = event.target;
-            if ( (box.scrollHeight - box.scrollTop) < (box.clientHeight + 100) ) {
-                this.vm.$emit('scrolled-to-bottom');
-            }
-        },
+        //     console.log('scrolled')
+
+        //     let box = event.target;
+        //     if ( (box.scrollHeight - box.scrollTop) < (box.clientHeight + 100) ) {
+        //         this.vm.$emit('scrolled-to-bottom');
+        //     }
+        // },
 
         /**
          * Fetches the info about the user which we need later

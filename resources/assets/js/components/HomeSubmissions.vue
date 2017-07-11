@@ -99,6 +99,8 @@
 
 	    methods: {
 			loadMore() {
+				console.log('homesubmissions > loadmore');
+
 				if (Store.contentRouter == 'content' && !this.loading && !this.NoMoreItems && this.$route.name == 'home') {
 					this.getSubmissions()
 				}

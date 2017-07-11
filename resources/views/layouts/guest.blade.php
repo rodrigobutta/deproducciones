@@ -33,7 +33,7 @@
 <body>
 @include('google-analytics')
 
-<div id="voten-app" :class="{ 'background-white': Store.contentRouter != 'content' }" @scroll="scrolled">
+<div id="voten-app" :class="{ 'background-white': Store.contentRouter != 'content' }" {{-- @scroll="scrolled" --}}>
     @include('app-header')
 
     <div class="v-content-wrapper">

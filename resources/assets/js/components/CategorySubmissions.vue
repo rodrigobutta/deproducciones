@@ -116,6 +116,7 @@ export default {
 
 
 		loadMore () {
+            console.log('loadMore')
 			if (Store.contentRouter == 'content' && !this.loading && !this.NoMoreItems) {
 				this.getSubmissions();
 			}
